@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Directory Name="ECRHQ">
+<Contact Id=1 Name="85008" Office="85008" />
+<Contact Id=2 Name="SINU" Office="85005" />
+<Contact Id=3 Name="DRM" Office="85004" />
+<Contact Id=4 Name="CSTE" Office="85003" />
+<Contact Id=5 Name="DSTE-T" Office="85002" />
+<Contact Id=6 Name="SSE-T" Office="85001" />
+</Directory>

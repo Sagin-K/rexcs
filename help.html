@@ -1,0 +1,102 @@
+<?
+include('./header.php');
+//include("./userAccess.php");
+$month="CURRENT_TIMESTAMP";
+$mnth=date('n', time());
+$year=date('Y', time());
+if((isset($_GET['year'])) && ($_GET['year']!="")){
+$mnth=$_GET['month'];
+$year=$_GET['year'];
+$month="'".$_GET['year']."-".$_GET['month']."-1'";
+//echo $month;
+}
+$from="CURDATE()";
+$to="(CURDATE()- interval 1 Month)";
+//--------------Registrars -----------//
+	$q="select * from $regTable where reg1_name!='' and rly='$rly' and divn='$divn' ";
+	$s=mysqli_query($conn,$q);
+	//	print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		$regcount=mysqli_num_rows($s);
+		}
+//--------------intercoms -----------//
+
+	$q="SELECT COUNT(DISTINCT icoms.icom_name) AS count ";
+	$q.="FROM icoms ";
+	$q.="INNER JOIN registrars ON icoms.server_id = registrars.id ";
+	$q.="WHERE rly= '$rly' and divn='$divn'";
+	//$q="SELECT COUNT(DISTINCT icom_name) as count FROM $icomTable where icom_name!=''  ";
+	//print $q;
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$icomcount=$d['count'];
+					}
+		
+//--------------ipphone -----------//
+	$q="SELECT COUNT(accounts.acc_name) AS count ";
+	$q.="FROM accounts ";
+	$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE rly= '$rly' and divn='$divn' and acc_type='ip' ";
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='ip' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$ipcount=$d['count'];
+					}
+//--------------ipphone -----------//
+	$q="SELECT COUNT(accounts.acc_name) AS count ";
+	$q.="FROM accounts ";
+	$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE rly= '$rly' and divn='$divn' and acc_type='analog' ";
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='analog' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$analogcount=$d['count'];
+					}
+		
+//////////////////Req//////////////////////////
+?>
+	
+
+		<div class="sticky w3-bar " >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"> About RExCS V.1</div>
+		</div>
+		<div class="w3-light-grey w3-large">
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Configuration Of Exchange </h3>
+			
+			<p class="">* &nbsp;&nbsp;&nbsp;Each user can create as many Exchanges (Registrars) required for the Division which the user belongs to. 
+				The 'Registrar' in which the 'Phone accounts' need to be added/edited must be selected from the "registar list" for configuration.<br>
+				* &nbsp;&nbsp;&nbsp;Before addding a Phone-account, 'ICOM' must be defined. As many ICOMs may be created in a register. Phone Accounts may be created in any of these ICOMs acccordingly.<br>
+				*&nbsp;&nbsp;&nbsp;Registrar details, ICOM name, Phone Account details may be edited or deleted at any time. <br>
+				*&nbsp;&nbsp;&nbsp;Finally by clicking Save to Server button, all the changes will be updated in the selected Registrar remotely.
+				</p> 
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Site Details </h3>
+			<p class=""><b > Server Config. </b> <br> 
+				*. Create Registrar if new exchange is being configured or Skip this step <br>
+				*. Select Registrar for Configuration by Going to Registrar Page and clicking the "Config" Button available in the row <br>
+				*. Create ICOM/s if new icom group is to be made. The acounts will be created in this ICOM/s <br>
+			<p class=""> <b > Phone Accounts Config. </b> <br>
+				*. Accounts for IP phone as well as Analogue phones can be added  <br>
+				*. Boss-Secratery, Byte icom no, Short codes and Secondary account may be assigned for already created Phone accounts  <br>
+				*. Conference facility may be provided for any number accordingly </p>
+			<p class=""> <b > Trunk Config. </b> <br> 
+				*. Add SIP gateways if any by providing Name and IP of the neighbour Server/SIP GW <br>
+				*. Add Analogue gateways if any by providing Name, IP and number of ports of the GW <br>
+				*. Phone numbers may be assigned to FXS gateway ports for autoconfiguration of fxs (*Future development)  <br>
+				*. Route can be added for different patterns by selecting the gateway. Alternate secondary path for each patters also may be added  
+				</p>
+			<p class=""> <b > Hunt Group. </b> <br> 
+				*. Not available now </p>
+			<p class=""> <b > Conference. </b> <br> 
+				*. Conference facility may be provided for any number accordingly </p>
+			<p class=""> <b > Save Configuration </b> <br> 
+				*. Can view the recent changes made </br>
+				*. by Clicking Save to Server button, All the changes will be copied to the VOIP server which is being configured and the services will be reloaded. </p>
+			<p class=""> <b > Change Password </b> <br> 
+				*. User may easily change the passsword of the account. </p>
+		</div>
+		<div class="w3-bar-block w3-large">
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Contacts </h3>
+					<b class="w3-bar-item w3-medium">Sagin K. SSE/T/PGT/SR : 9746763828</b> 
+					<b class="w3-bar-item w3-medium">Jharia . Instructor/T/IRISET : 9000841246</b>
+					
+				  </div>

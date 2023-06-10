@@ -1,0 +1,4 @@
+registrar PGTDivn(10.187.9.100,10.187.9.101)
+rly_std_code 060 
+rly_std_code 0494 
+icom ele(PGTDivn)

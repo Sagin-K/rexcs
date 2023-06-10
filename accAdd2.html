@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+<script src="./../../jquery/jquery-1.10.2.js"></script>
+<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../../jquery/style.css">
+<script src="./datepicker.js"></script>
+<script src="./index.js"></script>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+  padding: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 8px;
+}
+
+.container {
+ 
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text], select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+<?
+//include("./createTables.php");
+include("./userAccess.php");
+include("./header.php");
+//$department=$_SESSION['dept'];
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+
+	//---------------------check whether Server is selected or not
+	if(isset($_SESSION['registrar'])){
+	$registrar=$_SESSION['registrar'];	
+	$action="ip";
+	if(isset($_GET['action']) && $_GET['action']!=""){
+	$action=$_GET['action'];
+	}
+//---------------------NEW-----------------------------------------
+	$id="";
+	$accID="";
+	$cat="";
+	$page="add";
+	$server_id=$_SESSION['registrar'];
+	$acc_type="";
+	$acc_name="";
+	$icom_name="";
+	$disp_name="";	
+	$icom_no="";
+	$secret1="";
+	$rly_no="";
+	$pstn_no="";
+	$server2="";
+	$user_id2="";
+	$password2="";
+	$mac="";
+	$phone="";
+	$ps_no="";
+	$ps_type="";
+	$acc_vlan="";
+	$gw_id="";
+	$gw_port="";
+	$gw_port_name="";
+	$map_no="";
+	$byte_no="";
+	$remark="";
+	$updated_by="";
+	$mnth=date('n', time());
+	$year=date('Y', time());
+//------------------ON EDIT--------------------------------------------
+if(isset($_GET['id']) && $_GET['id']!=""){
+	$page="edit";
+	$id=$_GET['id'];
+	$accid=$_GET['id'];
+	$q="SELECT * FROM $accTable where id = $id and server_id= $registrar";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){ 
+	$server_id=$d['server_id'];
+	$acc_type=$d['acc_type'];
+	$acc_name=$d['acc_name'];
+	$icom_name=$d['icom_name'];
+	$disp_name=$d['disp_name'];	
+	$icom_no=$d['icom_no'];
+	$secret1=$d['secret1'];
+	$rly_no=$d['rly_no'];
+	$pstn_no=$d['pstn_no'];
+	$server2=$d['server2'];
+	$user_id2=$d['user_id2'];
+	$password2=$d['password2'];
+	$mac=$d['mac'];
+	$phone=$d['phone'];
+	$ps_no=$d['ps_no'];
+	$ps_type=$d['ps_type'];
+	$acc_vlan=$d['acc_vlan'];
+	$gw_id=$d['gw_id'];
+	$gw_port=$d['gw_port'];
+	$gw_port_name=$d['gw_port_name'];
+	$map_no=$d['map_no'];
+	$byte_no=$d['byte_no'];
+	$remark=$d['remark'];
+	}}
+}
+?>
+
+
+<title> IP Phone Add</title>
+</head>
+
+<body>
+<div id="main" class="">
+		<input type="hidden" id="id" value="<? print $id;?>">
+		<input type="hidden" id="rly" value="<? print $rly;?>">
+		<input type="hidden" id="divn" value="<? print $divn;?>">
+		<input type="hidden" id="server_id" value="<? print $server_id;?>">
+		<input type="hidden" id="page" value="<? print $page;?>">
+		<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		<? 	$q="select * from $regTable where id=$server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+									if(!(!$s) || mysqli_num_rows($s)>0){
+									while($d=mysqli_fetch_assoc($s)){ 
+									$reg1_name=$d['reg1_name'];
+									$reg1_ip=$d['reg1_ip'];
+									$location=$d['location'];
+									$rly_no_length=$d['rly_no_length'];
+									$icom_no_length=$d['icom_no_length'];
+									$pstn_no_length=$d['pstn_no_length'];
+								}
+								}
+			
+			if ($action=="ip"){ ?>
+		<!--------------------------------------IP Phone Add-------------------------------------------------------->		
+		<div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?>
+		  </div>
+		</div>
+		<h3 style="text-transform:uppercase;" align=center> </h3></td></tr>
+				<input type="hidden" id="acc_type" value="ip">
+				<input type="hidden" id="pstn_no" value="">
+				<input type="hidden" id="pstn_no_msg" value="">
+		
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> Intercome Name <b class="w3-text-red">*</b></div>
+					<div class=" w3-threequarter">
+					<select id="icom_name" name="icom_name" style="width:150px">
+									<? 	$q="select * from $icomTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$icom_name){
+										print "<option value=\"{$d['id']}\" selected>{$d['icom_name']}</option>";
+										}else{
+											print "<option value=\"{$d['id']}\" >{$d['icom_name']}</option>";
+											}
+									}
+									}
+								?>
+					</select>
+					<div id="icom_name_msg"></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> Designation <b class="w3-text-red">*</b></div>
+					<div class="w3-quarter">
+					<input type="text" id="acc_name" name="acc_name" value="<? print $acc_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Designation" style="width:150px">
+					<div id="acc_name_msg" ></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> Display Name <b class="w3-text-red">*</b></div>
+					<div class="w3-quarter">
+					<input type="text" id="disp_name"  style="width:150px" name="disp_name" value="<? print $disp_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name To be Displayed" style="width:150px">
+					<div id="disp_name_msg"></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> Railway Number <b class="w3-text-red">*</b></div>
+					<div class="w3-quarter">
+					<input type="text" id="rly_no" name="rly_no" style="width:150px" value="<? print $rly_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $rly_no_length; ?> digit Number">
+					<div id="rly_no_msg"></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> Intercom Number <b class="w3-text-red">*</b></div>
+					<div class="w3-quarter">
+					<input type="text" id="icom_no" name="icom_no" style="width:150px" value="<? print $icom_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $icom_no_length; ?> digit Number">
+					<div id="icom_no_msg"></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Password <b class="w3-text-red">*</b></div>
+					<div class="w3-threequarter">
+					<input type="text" id="secret1" name="secret1" style="width:150px" value="<? print $secret1; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Account password for this IP No.">
+					<div id="secret1_msg"></div>
+					</div>
+				</div>
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> IP Phone Model</div>
+					<div class="w3-quarter">
+					<select id="phone" name="phone"  style="width:150px">
+									<? 	$catList=array(	'',
+														'Yealink-T23G',
+														'Yealink-T27G',
+														'Mitel-6865i');
+									foreach($catList as $val) {
+										if($val==$phone){
+										print "<option value=\"{$val}\" selected>{$val}</option>";
+										}else{
+											print "<option value=\"{$val}\" >{$val}</option>";
+											}
+									}
+								?>
+					</select>
+					<div id="phone_msg"></div>
+					</div>
+				</div>
+				
+				
+				<div class=""><div class="w3-quarter"><i class="fa fa-modx" aria-hidden="true"></i> MAC ID</div>
+					<div class="w3-quarter">
+					<input type="text" id="mac" name="mac" style="width:150px" value="<? print $mac; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="xx-xx-xx-xx-xx-xx">
+					<div id="mac_msg"></div>
+					</div>
+				</div>
+				
+				
+				<!--tr><div class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> PSTN Number </div>
+				<div class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="pstn_no" name="pstn_no" value="< ? print $pstn_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="< ? print $pstn_no_length; ?> digit Number">
+				<div id="pstn_no_msg"></div>
+				</div></tr-->
+						
+				<div colspan=2 class="w3-right">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=ip&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-bottom w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+					<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+					</div>
+	<!----------------------------- IP Phone Add Ends--------------------------------------------->	
+		<? } elseif ($action=="ip2"){ ?>
+	<!----------------------------- IP 2 Add --------------------------------------------->	
+				<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Secondary Account</h3></td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> IP Phone Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="accID" name="accID" >
+								<? 	$q="select * from $accTable WHERE server_id= $server_id AND acc_type='ip' ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$accID){
+									print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="accID_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Second SIP Server <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="server2" name="server2" value="<? print $server2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Secondary SIP server">
+				<div id="server2_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> User ID <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="user_id2" name="user_id2" value="<? print $user_id2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="User ID in Second SIP Serv">
+				<div id="user_id2_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Password <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="password2" name="password2" value="<? print $password2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Password for Second SIP Serv">
+				<div id="password2_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2 class="w3-center">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=ip2&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue" >
+					<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+					</td></tr>
+				</table>	
+	<!----------------------------- IP2 Add Ends--------------------------------------------->	
+		<? } elseif ($action=="bs"){ ?>
+	<!----------------------------- Boss-Secy Add --------------------------------------------->			
+	
+				<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Boss- Secretary Numbers</h3></td></tr>
+		
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> Boss Phone Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="accID" name="accID" >
+								<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$id){
+									print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="accID_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> B-S Type <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="ps_type" name="ps_type" >
+								<? 	$catList=array(	'default',
+													'only_secy');
+								foreach($catList as $val) {
+									if($val==$ps_type){
+									print "<option value=\"{$val}\" selected>{$val}</option>";
+									}else{
+										print "<option value=\"{$val}\" >{$val}</option>";
+										}
+								}
+							?>
+				</select>
+				<div id="ps_type_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> PS Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="ps_no" name="ps_no" >
+								<? 	$q="select * from $accTable  WHERE server_id= $server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$ps_no){
+									print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="ps_no_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2 class="w3-center">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=bs&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+					<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+					</td></tr>
+				</table>
+	<!----------------------------- Boss-Secy Add Ends--------------------------------------------->	
+		<? } elseif ($action=="analog"){ ?>
+	<!----------------------------- Analogue Ph Add --------------------------------------------->			
+				<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Analogue Number</h3></td></tr>
+				<input type="hidden" id="acc_type" value="analog">
+				<input type="hidden" id="pstn_no" value="">
+				<input type="hidden" id="pstn_no_msg" value="">
+		
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> Analogue Phone Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%">
+				<input type="text" id="acc_name" name="acc_name" value="<? print $acc_name; ?>" onkeyup="scanDatabase(this.id,this.value);scanDatabase(this.id,this.value);" placeholder="Name">
+				<div id="acc_name_msg"></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Password <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="secret1" name="secret1" value="<? print $secret1; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Account password for this IP No.">
+				<div id="secret1_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Intercome Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<select id="icom_name" name="icom_name" >
+								<? 	$q="select * from $icomTable  WHERE server_id= $server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$icom_name){
+									print "<option value=\"{$d['id']}\" selected>{$d['icom_name']}</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['icom_name']}</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="icom_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Display Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="disp_name" name="disp_name" value="<? print $disp_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name To be Displayed">
+				<div id="disp_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Intercom Number <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="icom_no" name="icom_no" value="<? print $icom_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="3 digit Number">
+				<div id="icom_no_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Railwy Number <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="rly_no" name="rly_no" value="<? print $rly_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="5 digit Number">
+				<div id="rly_no_msg" ></div>
+				</td></tr>
+				
+				<!--tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> PSTN Number</td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="pstn_no" name="pstn_no" value="< ? print $pstn_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="7 digit Number">
+				<div id="pstn_no_msg" ></div>
+				</td></tr-->
+						
+				<tr><td colspan=2 class="w3-center">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=analog&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+					<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+					</td></tr>
+				</table>
+		
+	<!----------------------------- Analogue Ph Add Ends--------------------------------------------->			
+		<? } elseif ($action=="map"){ ?>
+	<!----------------------------- map Add --------------------------------------------->			
+	
+				<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Short Code </h3></td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> Short Code <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%">
+				<input type="text" id="map_no" name="map_no" value="<? print $map_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Short code for Number">
+				<div id="map_no_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Phone Account Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="accID" name="accID" >
+								<? 	$q="select * from $accTable WHERE server_id= $server_id  ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$id){
+									print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="accID_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2 class="w3-center">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=map&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class="w3-button w3-blue w3-hover-light-blue w3-card-4" align=center>
+					<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"--></td></tr>
+				</table>
+	<!----------------------------- map Add Ends--------------------------------------------->	
+		<? } elseif ($action=="byte"){ ?>
+	<!----------------------------- byte Add --------------------------------------------->			
+	
+				<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Byte-Intercom Number </h3></td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> Phone Account Name <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="accID" name="accID" >
+								<? 	$q="select * from $accTable WHERE server_id= $server_id  ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$accID){
+									print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="accID_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Byte Intercom Number <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="byte_no" name="byte_no" value="<? print $byte_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Short code for Number">
+				<div id="byte_no_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2 class="w3-center">
+				<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=byte&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+				<? } ?>
+					<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" ></td></tr>
+				</table>
+				
+	<!----------------------------- byte Add Ends--------------------------------------------->	
+		
+			<? }
+			} else{      //-------------------------- Choose Server
+			Print "<b class='w3-xlarge  w3-text-red'>Please choose a VOIP Server from Server list.</b> ";
+			}?>	
+				 
+
+    </div>
+    <div id="msg" class="w3-text-red w3-center" >
+    </div>
+
+
+
+
+</body>
+</html>

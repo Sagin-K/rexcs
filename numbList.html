@@ -1,0 +1,72 @@
+	
+		<? 
+		include('./header.php');
+		$exchange="";
+		$rly="";
+		$divn="";
+		$search="";
+		$divnsearch="";
+		$regsearch="";
+		//session_start();
+		//include('./userAccess.php');
+		if((isset($_GET['reg'])) && ($_GET['reg']!="")){
+		$exchange=$_GET['reg'];
+									
+		$opTableCaption="List of <b>".$exchange." Exchange numbers</b>";
+		}
+		if((isset($_GET['rly'])) && ($_GET['rly']!="")){
+		$rly=$_GET['rly'];
+		$divnsearch.=" and rly='$rly' ";
+		$search.=" and rly='$rly' ";
+		//print $department;
+		}
+		if((isset($_GET['divn'])) && ($_GET['divn']!="")){
+		$divn=$_GET['divn'];
+		$regsearch.=$divnsearch." and divn='$divn' ";
+		$search.=" and divn='$divn' ";
+		//print $department;
+		}
+		if((isset($_GET['reg'])) && ($_GET['reg']!="")){
+		$reg=$_GET['reg'];
+		$search.=" and reg1_name='$reg' ";
+		//print $department;
+		}
+		if((isset($_GET['search'])) && ($_GET['search']!="")){
+			$search.=" AND (acc_name RLIKE \"{$_GET['search']}\" OR rly_no RLIKE \"{$_GET['search']}\" OR icom_no RLIKE \"{$_GET['search']}\" OR pstn_no RLIKE \"{$_GET['search']}\")";
+		}
+		
+		///////////////////////////////////////////////////////////////
+		?>
+	<table class="w3-table w3-border w3-bordered w3-striped w3-small" style="word-break:keep-all;padding-top:200px">
+			<?	$q="SELECT registrars.rly as rly, registrars.divn as divn, registrars.reg1_name as exchange, accounts.acc_name as acc_name, accounts.rly_no as rly_no, accounts.icom_no as icom_no, accounts.pstn_no as pstn_no ";
+				$q.="FROM accounts ";
+				$q.="INNER JOIN registrars ON accounts.server_id = registrars.id where acc_name!='' ";
+				$q.=$search;
+				$q.="ORDER BY rly,divn,exchange,acc_name";
+				//print $q;
+				$exchange="";
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+					while($d=mysqli_fetch_assoc($s)){
+					if($exchange!=$d['exchange']){
+					$exchange=$d['exchange'];
+				?>
+				<tr align="center" valign="top" style="background:#D6DBDF;text-align:center;height:50px;text-transform:capitalize;">
+					<td colspan="6" style="text-align:left;" class="w3-large"> <? print strtoupper("(".$d['rly']."-".$d['divn'].") ".$d['exchange']);?> Exchange </td>
+				</tr>
+				<? $i=1; } ?>
+				
+				<tr class="w3-teal w3-text-white w3-medium"  style="text-align:left;" valign="top">
+					<td width="10%"><? print $i; $i++ ;?></td>
+					<td width="30%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['acc_name']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['rly_no']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['icom_no']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['pstn_no']; ?></td>
+				</tr>
+				
+				<?	}
+				}
+			?>
+	</table>
+	

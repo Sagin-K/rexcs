@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<? session_start();?>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./w3.css">
+<script src="./login1.js"></script>
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+body {font-size: 16px;}
+img {margin-bottom: -8px;}
+.mySlides {display: none;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 1% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 85%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+</style>
+</head>
+
+<div id="id01" class="modal"> 
+	<div class="modal-content animate" >
+		<!--------------------------- Popup Page CONTENT! ------------------------------------------>
+		<div class="w3-small" style="overflow-x: auto;height:85%;overflow:auto;width:100%"  >
+			
+			<div id="popup" style="width:100%;">
+				
+			</div>
+		<!------------------- End page content ---------------------------------->
+		</div>
+		
+	</div>
+</div>
+
+<body style="max-width:1500px;background-image:url('/images/wallpaper1.webp');background-repeat:no-repeat;background-position: center;">
+<!-- Header Section -->
+<div class="w3-row w3-large w3-padding-16" >
+<div class="w3-large w3-padding-16" style="background:#18303c;opacity:0.6;height:150px"></div>
+	<!--div class=" w3-left w3-border-right w3-padding w3-top" >
+		  <span class="w3-hide-large  w3-large w3-text-blue" ><img src="./images/railway.png" class="w3-circle w3-margin-right" style="width:80px;height:80px"></span>
+		  <span class="w3-left w3-hide-small w3-hide-medium  w3-xxxlarge w3-text-blue"> <img src="./images/railway.png" class="w3-circle w3-margin-right" style="width:80px;height:80px"><b style="font-size:30px"></b></span>
+	</div-->
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-left w3-padding w3-display-topleft" style="margin-top:2%;margin-left:2%" >
+		<span style="font-family: Georgia, serif;text-shadow: 2px 2px 2px #E5AA70;color:#FFF8DC;" ><b>RExCS</b></span><span  style="text-shadow: 1px 1px 2px grey;color:red " > <b> - &#946; </b></span>
+		<br><i class="w3-large w3-text-brownr w3-opacity w3-text-white" >An ASTERISK based solution for Indian Railways' IP Exchange Management</i>
+	</div>
+	<div class=" w3-hide-large w3-xxlarge w3-center  w3-top" >
+		<span style="text-shadow: 1px 1px 2px black;color:brown " ><b>RExCS</b></span><span  style="text-shadow: 1px 1px 2px grey;color:red " > <b> - &#946; </b></span>
+		<br><p class="w3-medium w3-text-blue" ></p>
+	</div>
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-Right w3-padding" >
+		
+		
+	</div>
+  <div class="w3-right" >
+  <span class="w3-right" id="timestamp" ></span>
+  </div>
+</div>
+
+<!-- Login Section -->
+
+<div class="w3-row" >
+  <!--img src="/images/wallpaper4.jpg"  alt="Lights" style="height:500px;width:100%"-->
+    <div class="w3-col l9 m12 w3-padding w3-text-white"> <!----- Description --->
+		<h1 class="w3-large ">
+		<b>The Railway Exchange Configuration System (RExCS)</b>
+		is a web-based application developed by Indian Railways to manage its voice requirements.<br><br>
+		Indian Railways has adopted an Asterisk-based VOIP solution for its communication needs,
+		which is a software platform used for building communication applications such as VoIP telephony systems,
+		video conferencing, and messaging applications. With Asterisk,
+		Indian Railways can take advantage of a wide range of communication services,
+		including call routing, voice mail, interactive voice response (IVR),
+		and conference calling.
+		</h1>
+		<p class="w3-large "> Asterisk is known for its high configurability and flexibility
+		and can be easily integrated with other software applications to create customised communication solutions.
+		The software supports a variety of protocols and codecs for communication over the internet, including SIP, H.323, and IAX.
+
+		</p>
+		<p class="w3-large">To simplify the management and configuration of Asterisk-based VOIP Exchanges in Indian Railways, RExCS will offer a graphical user interface.
+		</p>
+		
+    </div>
+	<div class="w3-col l3 m12 w3-border w3-border-white w3-round-large" >  <!----- Login style="background:#18303c;opacity:0.6;" -->
+      
+		<center>
+			<div id="logstatus" class=" w3-text-red"><h2 class="w3-text-blue w3-large"></h2></div>
+			<br>
+			<div class="w3-container w3-padding-">
+				<input class="w3-container w3-padding-16 w3-round-large" id="uname" type="text" placeholder="Username" name="email">
+			</div>
+			<div class="w3-container w3-padding-32">
+				<input class="w3-container w3-padding-16 w3-round-large" id="upswd" type="password" placeholder="Password" name="psw">
+			</div>
+			<div class="w3-container w3-padding">
+				<button  onclick="formSubmit()" id="login" class="w3-button w3-text-white w3-round-large w3-blue w3-hover-green w3-border w3-border-black" style="align:center;height:50px;width:230px;box-shadow: 3px 3px 3px black; "> LOGIN </button>
+				
+			</div>
+			<br>
+			<div id="signup" class="w3-medium">
+				<a  onclick="addPage('0','user','signup','Nil');" class=" w3-text-blue w3-hover-text-white">Create New Account</a>
+			</div><br>
+			<div id="signup" class="w3-medium">
+				<a  onclick="addPage('0','user','activate','Nil');" class=" w3-text-blue w3-hover-text-white"> Activate Account</a>
+			</div><br>
+			
+		</center>
+	</div>
+</div>
+ 	
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-center w3-xlarge w3-hide-small w3-hide-medium w3-bottom" style="background:#18303c;opacity:0.8;">
+  
+  <p class="w3-medium w3-display-bottommiddle w3-text-white w3-opacity" >&copy; All rights reserved with IRISET.<br><i class="w3-text-white">Please share Queries and Suggestions:  Sagin K . SSE/Tele/PGT/SR &#9990; 9746763828 </i></p>
+  
+</footer>
+
+
+</body>
+</html>

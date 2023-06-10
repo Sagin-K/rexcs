@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./../w3.css">
+<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+<script src="./../../jquery/jquery-1.10.2.js"></script>
+<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../../jquery/style.css">
+<script src="./datepicker.js"></script>
+<script src="./index.js"></script>
+<?
+include("./createTables.php");
+include("./userAccess.php");
+include("./header.php");
+//$department=$_SESSION['dept'];
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+?>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+  padding: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 8px;
+}
+
+.container {
+ 
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text], select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+
+
+<title>Install RExCL</title>
+</head>
+
+<body>
+<?
+if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q1="SELECT * FROM $regTable where id = $registrar";
+		$s1=mysqli_query($conn,$q1);
+		if(!(!$s1) || mysqli_num_rows($s1)>0){
+		while($d1=mysqli_fetch_assoc($s1)){ 
+		$rly1=$d1['rly'];
+		$divn1=$d1['divn'];
+		$reg1_name=$d1['reg1_name'];
+		$reg1_ip=$d1['reg1_ip'];
+		$reg1_user=$d1['reg1_user'];
+		$reg1_root=$d1['reg1_root'];
+		$location=$d1['location'];
+		}}
+?>
+	<table>
+	<tr>
+		<td colspan=2  class="w3-center w3-text-blue w3-left"> Before continue with installation, PLease check the following <br>
+		* Ensure the VOIP server is reachable <br>
+		* Confirm the ssh root access and its username and passsword <br><br>
+		<b class="w3-text-red "> Warning!! - Exchange data if any already available in VOIP server will be deleted . </b>		
+		
+		</td>
+	</tr>
+	<tr>
+		<td  class="w3-center"><input id="submit" onclick="openWindow('./install.php?action=inst',500,800,'block');this.disabled=true;"  value="Install" class=" w3-center w3-button w3-blue" >
+			<input id="cancel" onclick="window.close();"  value="cancel" class="w3-center w3-button w3-red">
+		</td>
+	</tr>
+
+	</table>
+	<? } ?>
+</body>
+</html>	
+				

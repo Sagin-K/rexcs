@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+body {font-size: 16px;}
+img {margin-bottom: -8px;}
+.mySlides {display: none;}
+</style>
+</head>
+<body class="w3-content w3-grey" style="max-width:1500px;">
+
+<!-- Header Section -->
+<div class="w3-row w3-large w3-padding-16" style="z-index:5;background:#FDFEFE;height:35%  ">
+	<div class=" w3-left w3-border-right w3-padding" >
+		  <span class="w3-hide-large  w3-large w3-text-blue" ><img src="./images/iriset.png" class="w3-circle w3-margin-right" style="width:80px;height:80px"> IRISET</span>
+		  <span class="w3-left w3-hide-small w3-hide-medium  w3-xxxlarge w3-text-blue"> <img src="./images/iriset.png" class="w3-circle w3-margin-right" style="width:80px;height:80px"><b style="font-size:30px">IRISET</b></span>
+	</div>
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-left w3-padding" >
+		<span style="text-shadow: 1px 1px 2px black;color:brown " ><b>R</b>ailway <b>Ex</b>change <b>C</b>onfiguration <b>L</b>anguage </span>
+		<br><p class="w3-medium w3-text-blue" >An ASTERISK based solution for Indian Railways Voice requirements</p>
+	</div>
+	<div class=" w3-hide-large w3-xxlarge w3-center" >
+	<span style="text-shadow: 1px 1px 2px black;color:brown " ><b>R</b><b>Ex</b><b>C</b><b>L</b></span>
+	<br><p class="w3-medium w3-text-blue" ></p>
+  </div>
+
+  <div class="w3-right" >
+  <span class="w3-right" id="timestamp" ></span>
+  </div>
+</div>
+
+
+<!-- Login Section -->
+<div class="w3-padding-64 w3-light-grey">
+  <div class="w3-row-padding">
+    
+    <div class="w3-col l9 m12">
+      <h1 class="w3-jumbo"><b>Asterisk</b></h1>
+      <h1 class="w3-xlarge w3-text-red"><b> Asterisk is an open source framework for building communications applications. Asterisk turns an ordinary computer into a communications server.</b></h1>
+      <p>Asterisk is a framework for building multi-protocol, real-time communications applications and solutions. 
+		 Asterisk is to realtime voice and video applications as Apache is to web applications: the underlying platform. 
+		 Asterisk abstracts the complexities of communications protocols and technologies, allowing you to concentrate on creating innovative products and solutions.
+		</p>
+    </div>
+	<div class="w3-col l3 m12 w3-border w3-round-large">
+      
+		<center>
+		<h2 class="w3-text-blue w3-large">Login</h2>
+			<div class="w3-container w3-padding">
+				<input class="w3-container w3-padding-16 w3-round-large" id="uname" type="text" placeholder="Username" name="email">
+			</div>
+
+			<div class="w3-container w3-padding">
+				<input class="w3-container w3-padding-16 w3-round-large" id="upswd" type="password" placeholder="Password" name="psw">
+			</div>
+			<div class="w3-container w3-padding ">
+				<button  onclick="formSubmit()" id="login" class="w3-button w3-text-white w3-round-large w3-blue w3-hover-green" style="align:center;height:50px;width:200px"> Login </button>
+				
+			</div><br>
+			<!--div id="changePW" class="w3-small w3-text-blue w3-right">
+				<a href="" onclick="openWindow('./userAdd.html?action=change');">change PW</a>
+			</div-->
+			<div id="signup" class="w3-medium w3-right">
+				Not registered?? <a href="" onclick="openWindow('./userAdd.html?action=signup');" class=" w3-text-blue">Signup</a>
+			</div>
+			<div id="logstatus" class="w3-medium w3-text-red"></div>
+		</center>
+	</div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-grey w3-center w3-xlarge">
+  <!--div class="w3-section">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+  </div-->
+  <p class="w3-medium">Designed by IRISET</p>
+</footer>
+
+<script>
+// Slideshow
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
+
+</body>
+</html>

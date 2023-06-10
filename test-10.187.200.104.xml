@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="1.0">
+  <port0>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port0>
+  <port1>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port1>
+  <port2>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port2>
+  <port3>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port3>
+  <port4>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port4>
+  <port5>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port5>
+  <port6>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port6>
+  <port7>
+    <param ipprofileindex="" telprofileindex="" display_name="" user_id="" auth_id="" auth_pwd="" />
+  </port7>
+</config>

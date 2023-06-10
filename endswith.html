@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>JavaScript Strings</h1>
+<h2>The endsWith() Method</h2>
+
+<p>endsWith() returns true if a string ends with a specified string, otherwise false.</p>
+
+<p>Check if "Hello world" ends with "world":</p>
+
+<p id="demo"></p>
+
+<p>endsWith() is not supported in IE 11 (or earlier versions).</p>
+
+<script>
+let text = "sset@pgt.railnet.gov.in";
+
+if(text.endsWith("gov.in")){
+document.getElementById("demo").innerHTML = "gov.in";
+}
+else {
+document.getElementById("demo").innerHTML = "Not gov.in";
+}
+</script>
+
+</body>
+</html>

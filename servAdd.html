@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./../w3.css">
+<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+<script src="./../../jquery/jquery-1.10.2.js"></script>
+<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../../jquery/style.css">
+<script src="./datepicker.js"></script>
+<script src="./index1.js"></script>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+  padding: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 8px;
+}
+
+.container {
+ 
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text], select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+<?
+include("./createTables.php");
+include("./userAccess.php");
+include("./header.php");
+//$department=$_SESSION['dept'];
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+
+$action="ip1";
+if(isset($_GET['action']) && $_GET['action']!=""){
+$action=$_GET['action'];
+}
+//---------------------NEW-----------------------------------------
+	$id="";
+	$page="add";
+	$location="";
+	$reg1_name="";
+	$reg2_name="";
+	$reg1_ip="";
+	$reg2_ip="";
+	$reg1_user="";
+	$reg1_root="";
+	$reg2_root="";
+	$rly_no_length="";	
+	$pstn_no_length="";
+	$icom_no_length="";
+	$rly_code="";
+	$pstn_code="";
+	$serv_make="";
+	$updated_by="";
+	
+	$server_id="";	
+	$icom_name="";
+	$department="";
+	$vlan="";
+	
+	$type="";
+	$port="";
+	$gw_ip="";
+	$gw_name="";
+	
+	$route_name="";
+	$pattern="";
+	$gw_id1="";
+	$gw_id2="";
+	$transform1="";
+	$transform2="";
+	$trans_no1="";
+	$trans_no2="";
+	$remark="";
+	
+	$conf_name="";
+	$conf_no="";
+	$conf_type="";
+	$conf_admin="";
+	
+	$mnth=date('n', time());
+	$year=date('Y', time());
+//------------------ON EDIT--------------------------------------------
+if(isset($_GET['id']) && $_GET['id']!=""){
+	$page="edit";
+	$id=$_GET['id'];
+	
+	if(isset($_GET['action']) && $_GET['action']=="reg"){
+	$q="SELECT * FROM $regTable where id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){ 
+	$location=$d['location'];
+	$rly=$d['rly'];
+	$divn=$d['divn'];
+	$reg1_name=$d['reg1_name'];
+	$reg2_name=$d['reg2_name'];
+	$reg1_ip=$d['reg1_ip'];
+	$reg2_ip=$d['reg2_ip'];
+	$reg1_user=$d['reg1_user'];
+	$reg1_root=$d['reg1_root'];
+	$reg2_root=$d['reg2_root'];
+	$rly_no_length=$d['rly_no_length'];	
+	$pstn_no_length=$d['pstn_no_length'];
+	$icom_no_length=$d['icom_no_length'];
+	$rly_code=$d['rly_code'];
+	$pstn_code=$d['pstn_code'];
+	$serv_make=$d['serv_make'];
+	$updated_by=$d['updated_by'];
+	}}}
+	
+	if(isset($_GET['action']) && $_GET['action']=="icom"){
+	$q="SELECT * FROM $icomTable where id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+	
+	$server_id=$d['server_id'];
+	$icom_name=$d['icom_name'];
+	$department=$d['department'];
+	$vlan=$d['vlan'];
+	}}}
+	
+	if(isset($_GET['action']) && ($_GET['action']=="gw" || $_GET['action']=="exch")){
+	$q="SELECT * FROM $gwTable where id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+		
+	$server_id=$d['server_id'];
+	$type=$d['type'];
+	$port=$d['port'];
+	$gw_ip=$d['gw_ip'];
+	$gw_name=$d['gw_name'];
+	}}}
+	
+	if(isset($_GET['action']) && $_GET['action']=="route"){
+	$q="SELECT * FROM $routeTable where id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+		
+	$server_id=$d['server_id'];
+	$route_name=$d['route_name'];
+	$pattern=$d['pattern'];
+	$gw_id1=$d['gw_id1'];
+	$gw_id2=$d['gw_id2'];
+	$transform1=$d['transform1'];
+	$transform2=$d['transform2'];
+	$trans_no1=$d['trans_no1'];
+	$trans_no2=$d['trans_no2'];
+	$remark=$d['remark'];
+	}}}
+	if(isset($_GET['action']) && $_GET['action']=="conf"){
+	$q="SELECT * FROM $confTable where id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+		
+	$conf_name=$d['conf_name'];
+	$conf_no=$d['conf_no'];
+	$conf_type=$d['conf_type'];
+	$conf_admin=$d['conf_admin'];
+	$remark=$d['remark'];
+	}}}
+	$mnth=date('n', time());
+	$year=date('Y', time());
+//------------------ON EDIT--------------------------------------------
+}
+if(isset($_SESSION['registrar']) && $_SESSION['registrar']!=""){
+$server_id=$_SESSION['registrar'];
+}
+
+?>
+
+
+<title> Server Add</title>
+</head>
+
+<body>
+<div >
+    <div id="main">
+		<input type="hidden" id="id" value="<? print $id;?>">
+		<input type="hidden" id="rly" value="<? print $rly;?>">
+		<input type="hidden" id="divn" value="<? print $divn;?>">
+		<input type="hidden" id="page" value="<? print $page;?>">
+		<input type="hidden" id="server_id" value="<? print $server_id;?>">
+		<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+		<? if ($action=="reg"){ ?>
+		<!--------------------------------------Registrar Add-------------------------------------------------------->		
+			<table width=100% class="w3-padding">
+				<tr  ><td colspan=2 class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?> Registrar </h3></td></tr>
+				<input type="hidden" id="acc_type" value="reg">
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><i class="fa fa-map-marker" aria-hidden="true"></i> Location  <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown w3-half" width=60%>
+				<input type="text" id="location" name="location" value="<? print $location; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Location / Div or Station">
+				<div id="location_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-database" aria-hidden="true"></i> Name of Registrar <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="reg1_name" name="reg1_name" value="<? print $reg1_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Unique name for this Server"><div id="reg1_name_msg"></div>
+				<div id="reg1_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-file-code-o" aria-hidden="true"></i> Primary Server IP <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="reg1_ip" name="reg1_ip" value="<? print $reg1_ip; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="IPv4 Address [xx.xx.xx.xx]"><div id="reg1_ip_msg"></div>
+				<div id="reg1_ip_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-file-code-o" aria-hidden="true"></i> Secondary Server IP </td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="reg2_ip" name="reg2_ip" value="<? print $reg2_ip; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="IPv4 Address [xx.xx.xx.xx]"><div id="reg2_ip_msg"></div>
+				<div id="reg2_ip_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-phone-square" aria-hidden="true"></i> Railway STD code <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="rly_code" name="rly_code" value="<? print $rly_code; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="STD Code [ Numbers Only ]"><div id="rly_code_msg"></div>
+				<div id="rly_code_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-arrows-h" aria-hidden="true"></i> Length of Railway Phone No. <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="rly_no_length" name="rly_no_length" value="<? print $rly_no_length; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Number of Digits Omitting STD code"><div id="rly_no_length_msg"></div>
+				<div id="rly_no_length_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-arrows-h" aria-hidden="true"></i> Length of Intercom No. <b class="w3-text-red">*</b></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="icom_no_length" name="icom_no_length" value="<? print $icom_no_length; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Number of Digits Omitting STD code"><div id="icom_no_length_msg"></div>
+				<div id="icom_no_length_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-phone-square" aria-hidden="true"></i> PSTN STD Code <br>(if BSNL is connected)</td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="pstn_code" name="pstn_code" value="<? print $pstn_code; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="PSTN STD code of the area [ Numbers Only ]"><div id="pstn_code_msg"></div>
+				<div id="pstn_code_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-arrows-h" aria-hidden="true"></i> Length of PSTN Phone No.</td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="pstn_no_length" name="pstn_no_length" value="<? print $pstn_no_length; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Number of Digits Omitting STD code"><div id="pstn_no_length_msg"></div>
+				<div id="pstn_no_length_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-desktop" aria-hidden="true"></i> Username (for SSH) </td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="reg1_user" name="reg1_user" value="<? print $reg1_user; ?>"  placeholder="Username with Root Privilege">
+				<div id="reg1_user_msg"></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-desktop" aria-hidden="true"></i> Password (for SSH)</td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="reg1_root" name="reg1_root" value="<? print $reg1_root; ?>"  placeholder="password">
+				<div id="reg1_root_msg"></div>
+				</td></tr>
+						
+				<tr><td colspan=2 class="w3-border-bottom w3-border-bottom-brown w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=reg&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+			</table>
+	<!----------------------------- Reg Add Ends--------------------------------------------->	
+		<? } elseif ($action=="icom"){ ?>
+	<!----------------------------- Intercom Add --------------------------------------------->
+					<? 	$q="select * from $regTable where id=$server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+									if(!(!$s) || mysqli_num_rows($s)>0){
+									while($d=mysqli_fetch_assoc($s)){ 
+									$reg1_name=$d['reg1_name'];
+									$reg1_ip=$d['reg1_ip'];
+									$location=$d['location'];
+								}
+								}
+							?>	
+			<table width=100% class="w3-padding">
+				<tr><td colspan=2 class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center><? print $page ?> Intercome in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></b> </h3></td></tr>
+				<input type="hidden" id="acc_type" value="icom">
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"  width=40%><label for="icom_name"><i class="fa fa-object-group" aria-hidden="true"></i>  Intercom Name <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown"  width=60%>
+				<input type="text" id="icom_name" name="icom_name" value="<? print $icom_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Unique Name of Intercome">
+				<div id="icom_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="department"><i class="fa fa-building-o" aria-hidden="true"></i>  Department <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="department" name="department" value="<? print $department; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Department">
+				<div id="department_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="vlan"><i class="fa fa-tags" aria-hidden="true"></i>  Icom Voice VLAN No.</label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="vlan" name="vlan" value="<? print $vlan; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Voice VLAN no of this Intercom">
+				<div id="vlan_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2 class="w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=icom&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+			</table>	
+	<!----------------------------- Intercom Add Ends--------------------------------------------->	
+		<? } elseif ($action=="exch"){ ?>
+	<!----------------------------- Exch Add --------------------------------------------->			
+			
+			<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Neighbour Exchange Details</h3>
+				<input type="hidden" id="acc_type" value="gw">
+				<input type="hidden" id="port" value="0" >
+				<input type="hidden" id="type" value="exch" >
+				<input type="hidden" id="port_msg" value="" >
+				<input type="hidden" id="type_msg" value="" >
+				</td></tr>
+				
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="gw_name"><i class="fa fa-modx" aria-hidden="true"></i>Name of the Exchange <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="gw_name" name="gw_name" value="<? print $gw_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name">
+				<div id="gw_name_msg" ></div>
+				</td></tr>
+				
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="gw_ip"><i class="fa fa-modx" aria-hidden="true"></i>IP of the Exchange <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="gw_ip" name="gw_ip" value="<? print $gw_ip; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="IP">
+				<div id="gw_ip_msg" ></div>
+				</td></tr>
+				
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=gw&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('gw');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+			</table>
+		<!----------------------------- Exch Add Ends--------------------------------------------->	
+			<? } elseif ($action=="gw"){ ?>
+	<!----------------------------- Gateway Add --------------------------------------------->			
+
+			<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Gateways</h3></td></tr>
+				<input type="hidden" id="acc_type" value="gw">
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="type"><i class="fa fa-modx" aria-hidden="true"></i> Gateway Type  <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" width=60%>
+				<select id="type" name="type" onchange="hidePort(this.value);">
+								<? 	$catList=array(	'pri',
+													'fxs',
+													'fxo'
+													);
+								foreach($catList as $val) {
+									if($val==$type){
+									print "<option value=\"{$val}\" selected>{$val}</option>";
+									}else{
+										print "<option value=\"{$val}\" >{$val}</option>";
+										}
+								}
+							?>
+				</select>
+				<div id="type_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="gw_name"><i class="fa fa-modx" aria-hidden="true"></i>Name of the Gateway <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="gw_name" name="gw_name" value="<? print $gw_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name">
+				<div id="gw_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="port"><i class="fa fa-modx" aria-hidden="true"></i> No of ports <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="port" name="port" value="<? print $port; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="No of Ports">
+				<div id="port_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="gw_ip"><i class="fa fa-modx" aria-hidden="true"></i>IP of the Gateway <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="gw_ip" name="gw_ip" value="<? print $gw_ip; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="IP">
+				<div id="gw_ip_msg" ></div>
+				</td></tr>
+				
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=gw&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+			</table>
+		<!----------------------------- gateway Add Ends--------------------------------------------->	
+		<? } elseif ($action=="route"){ ?>
+		
+		<!----------------------------- Route  Add --------------------------------------------->	
+
+			<table width=100% class="w3-padding">
+				<tr><td colspan=4 class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Routes</h3>
+				<input type="hidden" id="acc_type" value="route"></td></tr>
+				
+				<tr>
+					<td class="w3-border-bottom w3-border-bottom-brown" style="width:25%><label for="route_name"><i class="fa fa-modx" aria-hidden="true"></i>  Route Name <b class="w3-text-red">*</b></label></td>
+					<td colspan=3 class="w3-border-bottom w3-border-bottom-brown" style="width:75%">
+						<input type="text" id="route_name" name="route_name" value="<? print $route_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Route Name">
+						<div id="route_name_msg" ></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> pattern <b class="w3-text-red">*</b></label></td>
+					<td colspan=1 class="w3-border-bottom w3-border-bottom-brown">
+						<input type="text" class="w3-tooltip"  id="pattern" name="pattern" value="<? print $pattern; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="pattern (eg: 23X, 0X., X, Z, N)">
+						<div id="pattern_msg" ></div>
+					</td>
+					<td colspan=2 class="w3-border-bottom w3-border-bottom-brown w3-text-blue">
+						<i class="fa fa-question-circle-o w3-tooltip  w3-large" aria-hidden="true">
+						<b  class="w3-text w3-medium">
+							X Match any number from 0-9.<br>
+							Z Match any number from 1-9.<br>
+							N Match any number from 2-9.<br>
+							[2-5] Matches a single digit that is 2 or 3 or 4 or 5.<br>
+							23X Matches any three digit number from 230 to 239.<br>
+							0X. Matches any number of digits starting with a 0. The dot (.) matches
+							any number of digits. This even matches a number starting from 00.<br>
+							0Z. Matches any number of digits starting with a 0. The dot (.) matches
+							any number of digits. This does not matches a number starting from
+							00 but matches any number starting from 0.
+						</b></i>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="w3-border-bottom w3-border-bottom-brown" style="width:25%"><i class="fa fa-modx" aria-hidden="true"></i> Route 1 <b class="w3-text-red">*</b></td>
+					<td class="w3-border-bottom w3-border-bottom-brown"  style="width:25%">
+						<label class="w3-tiny w3-round w3-light-blue" for="gw_id1"> Gateway <b class="w3-text-red">*</b></label>
+						<span>
+							<select id="gw_id1" name="gw_id1" >
+											<option value="" ></option>
+											<? 	$q="select * from $gwTable  WHERE server_id=$server_id ";
+												$s=mysqli_query($conn,$q);
+												//	print mysqli_error($conn);
+													if(!(!$s) || mysqli_num_rows($s)>0){
+													while($d=mysqli_fetch_assoc($s)){ 
+												if($d['id']==$gw_id1){
+												print "<option value=\"{$d['id']}\" selected>{$d['gw_name']} </option>";
+												}else{
+													print "<option value=\"{$d['id']}\" >{$d['gw_name']}</option>";
+													}
+											}
+											}
+										?>
+							</select>
+						<div id="gw_id1_msg" ></div>
+					</td>
+					<td class="w3-border-bottom w3-border-bottom-brown"  style="width:25%">
+						<label class="w3-tiny w3-round w3-light-blue" for="transform2"> Transformation</label>
+						<select id="transform1" onchange="scanDatabase(this.id,this.value);" name="transform1" >
+										<? 	$catList=array(	'None',
+															'prefix',
+															'suffix',
+															'slice',
+															'preslice');
+										foreach($catList as $val) {
+											if($val==$transform1){
+											print "<option value=\"{$val}\" selected>{$val}</option>";
+											}else{
+												print "<option value=\"{$val}\" >{$val}</option>";
+												}
+										}
+									?>
+						</select>
+						<div id="transform1_msg" ></div>
+					</td>
+					<td class="w3-border-bottom w3-border-bottom-brown"  style="width:25%">
+						<label class="w3-tiny w3-round w3-light-blue" for="trans_no1"> Transf. Number/Offset</label>
+						<input type="text" id="trans_no1" name="trans_no1" value="<? print $trans_no1; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="prefix/suffix/offset[:length]/prefix,offset[:length]" >
+						</span>
+						<div id="trans_no1_msg" ></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="w3-border-bottom w3-border-bottom-brown"><i class="fa fa-modx" aria-hidden="true"></i> Route 2</td>
+					<td class="w3-border-bottom w3-border-bottom-brown">
+					
+						<span>
+						<label class="w3-tiny w3-round w3-light-blue" for="gw_id2"> Gateway </label>
+							<select id="gw_id2" onchange="scanDatabase(this.id,this.value);" width="25%"  name="gw_id2"  >
+										<option value="N.A" >N.A</option>
+										<? 	$q="select * from $gwTable  WHERE server_id= $server_id ";
+											$s=mysqli_query($conn,$q);
+											//	print mysqli_error($conn);
+												if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+											if($d['id']==$gw_id2){
+											print "<option value=\"{$d['id']}\" selected>{$d['gw_name']} </option>";
+											}else{
+												print "<option value=\"{$d['id']}\" >{$d['gw_name']}</option>";
+												}
+										}
+										}
+									?>
+							</select>
+							<div id="gw_id2_msg" ></div>
+					</td>
+					<td class="w3-border-bottom w3-border-bottom-brown">
+						<label class="w3-tiny w3-round w3-light-blue" for="transform2"> Transformation</label>
+							<select id="transform2" onchange="scanDatabase(this.id,this.value);" width=25% name="transform2"  >
+									<? 	$catList=array(	'None',
+														'prefix',
+														'suffix',
+														'slice',
+														'preslice');
+									foreach($catList as $val) {
+										if($val==$transform2){
+										print "<option value=\"{$val}\" selected>{$val}</option>";
+										}else{
+											print "<option value=\"{$val}\" >{$val}</option>";
+											}
+									}
+								?>
+							</select>
+						<div id="transform2_msg" ></div>
+					</td>
+					<td class="w3-border-bottom w3-border-bottom-brown">
+						<label class="w3-tiny w3-round w3-light-blue" for="trans_no2"> Transf. Number/Offset</label>
+						<input type="text"  width="25%" id="trans_no2" name="trans_no2" value="<? print $trans_no2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="prefix/suffix/offset[:length]/prefix,offset[:length]" >
+						</span>
+						<div id="trans_no2_msg" ></div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class="w3-border-bottom w3-border-bottom-brown"><label for="remark"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Remarks</label></td>
+					<td colspan=3 class="w3-border-bottom w3-border-bottom-brown">
+						<input type="text" id="remark" name="remark" value="<? print $remark; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="remark">
+						<div id="remark_msg" ></div>
+					</td>
+				</tr>
+				
+						
+				<tr><td colspan=4 class="w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=route&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+		</table>
+	<!----------------------------- Route Add Ends--------------------------------------------->						
+		<? } elseif ($action=="conf"){ ?>
+	<!----------------------------- Conference Add --------------------------------------------->			
+
+			<table width=100% class="w3-padding">
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  Conferences </h3></td></tr>
+				<input type="hidden" id="acc_type" value="conf">
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="conf_name"><i class="fa fa-modx" aria-hidden="true"></i>Conference Name <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="conf_name" name="conf_name" value="<? print $conf_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name">
+				<div id="conf_name_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="conf_type"><i class="fa fa-modx" aria-hidden="true"></i> Conference Type  <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" width=60%>
+				<select id="conf_type" name="conf_type" >
+								<? 	$catList=array(	'default',
+													'attended'
+													);
+								foreach($catList as $val) {
+									if($val==$conf_type){
+									print "<option value=\"{$val}\" selected>{$val}</option>";
+									}else{
+										print "<option value=\"{$val}\" >{$val}</option>";
+										}
+								}
+							?>
+				</select>
+				<div id="conf_type_msg" ></div>
+				</td></tr>
+				
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="conf_no"><i class="fa fa-modx" aria-hidden="true"></i> Conference Number <b class="w3-text-red">*</b></label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="conf_no" name="conf_no" value="<? print $conf_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Conf Number">
+				<div id="conf_no_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:40%"><i class="fa fa-modx" aria-hidden="true"></i> Conference Admin <b class="w3-text-red">*</b>
+				<br><i class="w3-text-grey"> ( The conference PIN could be generated though this phone only )</i></td>
+				<td class="w3-border-bottom w3-border-bottom-brown" style="text-align:top;width:60%"> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<select id="conf_admin" name="conf_admin" >
+								<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+										if(!(!$s) || mysqli_num_rows($s)>0){
+										while($d=mysqli_fetch_assoc($s)){ 
+									if($d['id']==$id){
+									print "<option value=\"{$d['acc_name']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+									}else{
+										print "<option value=\"{$d['acc_name']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+								}
+								}
+							?>
+				</select>
+				<div id="conf_admin_msg" ></div>
+				</td></tr>
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown"><label for="remark"><i class="fa fa-modx" aria-hidden="true"></i> Remarks </label></td>
+				<td class="w3-border-bottom w3-border-bottom-brown">
+				<input type="text" id="remark" name="remark" value="<? print $remark; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Remearks">
+				<div id="remark_msg" ></div>
+				</td></tr>
+				
+				<tr><td colspan=2  class="w3-center">
+					<? if ($id!=""){ ?>
+						<input id="delete" onclick="openWindow('./accDel.html?action=conf&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-red w3-text-white w3-hover-light-blue" >
+					<? } ?>
+						<input id="submit" onclick="accAdd('<? print $action; ?>');"  value="Save" class=" w3-center w3-button w3-blue w3-hover-light-blue w3-card-4" >
+						<!-- input id="cancel" onclick="window.close();"  value="close" class="w3-center w3-button w3-red"-->
+				</td></tr>
+			</table>
+		<!----------------------------- Conf Add Ends--------------------------------------------->	
+			<? }?>	
+    </div>
+    <div id="msg" class="w3-text-red w3-center" >
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
