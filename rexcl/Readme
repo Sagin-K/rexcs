@@ -1,0 +1,7 @@
+RExCL Configuration Parser
+
+* RExCL reds the rexcl file and generates Asterisk based sip.cnf and exten.conf files for the various servers defined in the rexcl input file. 
+* These file should be kept in the /usr/local/share/rexcl/ folder on the Asterisk Server. 
+* The command to invoke the parser is 
+   $ python3 /usr/local/share/rexcl/main.py <input.rexcl>
+  
