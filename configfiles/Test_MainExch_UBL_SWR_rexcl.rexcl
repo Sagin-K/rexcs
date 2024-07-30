@@ -1,0 +1,3 @@
+registrar Test_MainExch(10.205.32.33)
+icom TeleExchOffice(Test_MainExch)
+phone JE/Tele/Exch/UBL (TeleExchOffice, 454, JE/Tele/Exch/UBL, 1234, 46454, -1, , )

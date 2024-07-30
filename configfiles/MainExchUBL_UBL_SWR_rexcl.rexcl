@@ -1,0 +1,5 @@
+registrar MainExchUBL(10.205.32.199,10.205.32.199)
+rly-std-code (065) 
+pstn-std-code (0836) 
+icom SnTExch(MainExchUBL)
+phone JE-TELE-EXCH (SnTExch, 46454, 46454, 46454, 46454, -1, , )

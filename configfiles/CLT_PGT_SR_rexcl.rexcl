@@ -1,0 +1,5 @@
+registrar CLT(10.187.1.190,10.187.1.103)
+rly-std-code (060) 
+pstn-std-code (0495) 
+gateway FXSCLT (fxs, 8, 10.187.1.105)
+vm (12345,SSESCLT)
