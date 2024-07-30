@@ -1,0 +1,282 @@
+	<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./../w3.css">
+<link rel="stylesheet" href="./../jquery/jquery-ui.css">
+<script src="./../jquery/jquery-1.10.2.js"></script>
+<script src="./../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../jquery/style.css">
+<script src="./../jscriptsrc/clock.js"></script>
+<script src="./../taskListQuickAction.js"></script>
+<script src="./index1.js"></script>
+<script>
+//----------- Time ------------
+	$(document).ready(function() {
+		setInterval(timestamp, 1000);
+	});
+
+	function timestamp() {
+		$.ajax({
+			url: './timestamp.php',
+			success: function(data) {
+				//alert (data);
+				$('#timestamp').html(data);
+			},
+		});
+	}
+
+
+
+	function formatDate(id){
+		var d=document.getElementById(id).value;
+		//alert("Note Date:"+d);
+		if(d.indexOf('/')>=0){
+			var tmp=d.split('/');
+			x=tmp[2]+"-"+tmp[0]+"-"+tmp[1];
+			document.getElementById(id).value=x;
+		}
+		return;
+	}
+
+</script>
+<style>
+th,td{
+	border-top:1px solid #888;
+	border-bottom:1px solid #ccc;
+}
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: yellow;
+  padding: 50px;
+  font-size: 20px;
+}
+tr.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 0;
+  top: 0;
+  font-size: 20px;
+}
+</style>
+<script>
+
+
+function printWindow(){
+	var pList=new Array('exchange','desig','department');
+	var p="./printDirectory.html?action=print";
+	//alert("Here");
+	for(k=0;k<pList.length;k++){	
+//alert();	
+				v=document.getElementById(pList[k]).value;
+				p+="&"+pList[k]+"="+encodeURIComponent(v);
+				
+		}
+		//alert(p);
+	window.open(p);
+}
+</script>
+<?
+include('./header.php');
+$exchange="";
+$rly="";
+$divn="";
+$search="";
+$searchbtn="";
+$divnsearch="";
+$regsearch="";
+$page="directory";
+//session_start();
+//include('./userAccess.php');
+
+if((isset($_GET['rly'])) && ($_GET['rly']!="")){
+$rly=$_GET['rly'];
+$divnsearch.=" and rly='$rly' ";
+$search.=" and rly='$rly' ";
+//print $department;
+}
+if((isset($_GET['divn'])) && ($_GET['divn']!="")){
+$divn=$_GET['divn'];
+$regsearch.=$divnsearch." and divn='$divn' ";
+$search.=" and divn='$divn' ";
+//print $department;
+}
+if((isset($_GET['reg'])) && ($_GET['reg']!="")){
+$exchange=$_GET['reg'];
+$search.=" and reg1_name='$exchange' ";							
+$opTableCaption="List of <b>".$exchange." Exchange numbers</b>";
+}
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$searchbtn=$_GET['search'];
+$search.=" AND (acc_name RLIKE \"{$_GET['search']}\" OR rly_no RLIKE \"{$_GET['search']}\" OR icom_no RLIKE \"{$_GET['search']}\" OR pstn_no RLIKE \"{$_GET['search']}\")";
+}
+///////////////////////////////////////////////////////////////
+?>
+
+<title> Telephone Directory</title>
+</head>
+<body onload="directory('');">
+				  
+<? if(!isset($_SESSION['astuser'])){ ?>
+		<div class=" w3-display-topright w3-padding w3-text-grey w3-medium"  style="z-index:5" >
+			<div class="w3-bar ">
+				<a href="./" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Home</a>
+				<a href=".//directory.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Directory</a>
+				
+				<div class="w3-dropdown-hover w3-border-right w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">Install</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="./uploads/Server installation Procedure to use RExCS.pdf" class="w3-bar-item w3-button" download>Server Installation Procedure</a>
+					<a href="./configfiles/install" class="w3-bar-item w3-button" download>REXCL Install file</a>
+					<a href="https://github.com/ptiriset/Asterisk" class="w3-bar-item w3-button">GitHub </a>
+				  </div>
+				</div>
+				<div class="w3-dropdown-hover w3-border-right  w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">Go To</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="http://10.195.2.19/" class="w3-bar-item w3-button">IRISET</a>
+					<a href="https://indianrailways.gov.in/" class="w3-bar-item w3-button">Indian Railways</a>
+					<a href="https://www.asterisk.org/" class="w3-bar-item w3-button">Asterisk</a>
+				  </div>
+				</div>
+				
+				<a href="./help.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Help</a>
+				<span class="w3-bar-item w3-right  w3-hide-medium w3-hide-small" id="timestamp" >IST [UTC+05.30]</span>
+
+			</div>
+		</div>	
+<? } ?>	
+
+<div class="w3-bar w3-white w3-center w3-large w3-padding sticky" style="position:sticky;width:100%">
+   <div class="" >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Railway Telephone Directory</div>
+		</div>
+		
+  <input type="hidden" id="page" value="<? print $page;?>" >
+ <div class="w3-bar w3-padding-8" style="width:100%;">
+	<!----------------------Rly-------------->
+	
+		<select id="rly" class="w3-bar-item w3-button w3-border-right w3-hover-light-gray" style="text-transform:uppercase;" onchange="directory('4');">
+				<? 
+				print "<option value=\"\">Railway  &#9662;</option>";				
+				$q="select DISTINCT rly from $regTable where reg1_name!='' order by rly";
+				
+				$s=mysqli_query($conn,$q);
+					//print mysqli_error($conn);
+					if(!(!$s) || mysqli_num_rows($s)>0){
+					while($d=mysqli_fetch_assoc($s)){ 
+					if($rly==$d['rly']){
+						print "<option value=\"{$rly}\" selected>{$d['rly']}</option>";
+						}
+					else{
+						print "<option value=\"{$d['rly']}\">{$d['rly']}</option>";
+						}
+						}} 
+				
+			?>
+		</select>
+	
+	<!----------------------Division-------------->
+	
+		<select id="divn" class="w3-bar-item w3-button w3-border-right w3-hover-light-gray w3-padding-8" style="text-transform:uppercase;" onchange="directory('4');">
+				<? 
+				print "<option value=\"\">Division  &#9662; </option>";				
+				$q="SELECT DISTINCT divn, rly FROM $regTable where divn!='' ";
+				$q.=$divnsearch;
+				$q.="ORDER BY rly";
+				//print $q;
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+					while($d=mysqli_fetch_assoc($s)){
+					if($divn==$d['divn']){
+						print "<option value=\"{$d['divn']}\" selected>{$d['divn']}</option>";
+						}
+					else{
+						print "<option value=\"{$d['divn']}\">{$d['divn']}</option>";
+						}
+					}
+				}
+			?>
+		</select>
+	
+	<!----------------------Server-------------->
+	
+		<select id="reg" class="w3-bar-item w3-button w3-border-right w3-hover-light-gray" style="text-transform:uppercase;" onchange="directory('4');">
+				<? 
+				print "<option value=\"\">Exchange  &#9662; </option>";				
+				$q="SELECT DISTINCT reg1_name, rly, divn as exchange FROM $regTable where divn!='' ";
+				$q.=$regsearch;
+				$q.="order by rly,divn ";
+				$s=mysqli_query($conn,$q);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+					while($d=mysqli_fetch_assoc($s)){
+					if($exchange==$d['exchange']){
+						print "<option value=\"{$d['exchange']}\" selected>{$d['exchange']}</option>";
+						}
+					else{
+						print "<option value=\"{$d['exchange']}\">{$d['exchange']}</option>";
+						}
+					}
+				}
+			?>
+		</select>
+	<div class="w3-bar-item w3-right " >
+		<input type="search" id="search" class=" w3-white w3-hover-light-blue w3-right" value="<? print $searchbtn; ?>"   onkeyup="directory('5');" placeholder="&#128269; Search"></input>
+	</div>
+</div>
+	<div class="w3-bar" style="overflow:auto;background:#18303c;width:100%">
+		<table class="w3-main w3-table w3-border w3-bordered w3-striped w3-small w3-opacity " style="word-break:keep-all;">
+			<tr class=" w3-text-white w3-small sticky "  style="text-align:left;" valign="top">
+				<th width="10%">Sl. No.</th>
+				<th width="30%" style="text-transform:uppercase;border-left:1px solid white">Name/Designation</th>
+				<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Rly Phone Number</th>
+				<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Intercom Number</th>
+				<th width="20%" style="text-transform:uppercase;border-left:1px solid white">PSTN Number</th>
+			</tr>			
+		</table>
+	</div>	
+
+  <!--div class="w3-bar-item w3-right" onclick="printWindow();"><i class="fa fa-print w3-text-blue  w3-xlarge"></i></div-->
+</div>
+<div class="w3-bar w3-centre w3-padding" style="overflow:auto;position:relative;">
+<div id="directory">
+<table class="w3-table w3-border w3-bordered w3-striped w3-small" style="word-break:keep-all;padding-top:200px">
+			<?	$q="SELECT registrars.rly as rly, registrars.divn as divn, registrars.reg1_name as exchange, accounts.acc_name as acc_name, accounts.rly_no as rly_no, accounts.icom_no as icom_no, accounts.pstn_no as pstn_no ";
+				$q.="FROM accounts ";
+				$q.="INNER JOIN registrars ON accounts.server_id = registrars.id where acc_name!='' ";
+				$q.=$search;
+				$q.="ORDER BY rly,divn,exchange,acc_name";
+				//print $q;
+				$exchange="";
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+					while($d=mysqli_fetch_assoc($s)){
+					if($exchange!=$d['exchange']){
+					$exchange=$d['exchange'];
+				?>
+				<tr align="center" valign="top" style="background:white;color:black;text-transform:capitalize;">
+					<td colspan="5" class="w3-large" style="text-align:left;"> <? print strtoupper("(".$d['rly']."-".$d['divn'].") ".$d['exchange']);?> Exchange </td>
+				</tr>
+				<? $i=1; } ?>
+				
+				<tr class="w3-teal w3-text-white w3-medium"  style="text-align:left;" valign="top">
+					<td width="10%"><? print $i; $i++ ;?></td>
+					<td width="30%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['acc_name']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['rly_no']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['icom_no']; ?></td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid white"><? print $d['pstn_no']; ?></td>
+				</tr>
+				
+				<?	}
+				}
+			?>
+		</table>
+</div>
+</div>
+
+
+</body>

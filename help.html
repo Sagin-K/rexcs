@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<?
+include('./header.php');
+//include("./userAccess.php");
+$month="CURRENT_TIMESTAMP";
+$mnth=date('n', time());
+$year=date('Y', time());
+
+//////////////////Req//////////////////////////
+?>
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./jquery/jquery-ui.css">
+<script src="./jquery/jquery-1.10.2.js"></script>
+<script src="./jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./jquery/style.css">
+<script src="./jscriptsrc/clock.js"></script>
+<script src="./login1.js"></script>
+<script>
+//----------- Time ------------
+	$(document).ready(function() {
+		setInterval(timestamp, 1000);
+	});
+
+	function timestamp() {
+		$.ajax({
+			url: './timestamp.php',
+			success: function(data) {
+				//alert (data);
+				$('#timestamp').html(data);
+			},
+		});
+	}
+
+
+
+	function formatDate(id){
+		var d=document.getElementById(id).value;
+		//alert("Note Date:"+d);
+		if(d.indexOf('/')>=0){
+			var tmp=d.split('/');
+			x=tmp[2]+"-"+tmp[0]+"-"+tmp[1];
+			document.getElementById(id).value=x;
+		}
+		return;
+	}
+
+</script>
+</head>
+<body style="margin-left:20px;">	
+
+		<div class="sticky w3-bar " >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"> About RExCS V.1</div>
+		</div>
+		<div class="w3-light-grey w3-large">
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Configuration Of Exchange </h3>
+			
+			<p class="">* &nbsp;&nbsp;&nbsp;Each user can create as many Exchanges (Registrars) required for the Division which the user belongs to. 
+				The 'Registrar' in which the 'Phone accounts' need to be added/edited must be selected from the "registar list" for configuration.<br>
+				* &nbsp;&nbsp;&nbsp;Before addding a Phone-account, 'ICOM' must be defined. As many ICOMs may be created in a register. Phone Accounts may be created in any of these ICOMs acccordingly.<br>
+				*&nbsp;&nbsp;&nbsp;Registrar details, ICOM name, Phone Account details may be edited or deleted at any time. <br>
+				*&nbsp;&nbsp;&nbsp;Finally by clicking Save to Server button, all the changes will be updated in the selected Registrar remotely.
+				</p> 
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Site Details </h3>
+			<p class=""><b > Server Config. </b> <br> 
+				*. Create Registrar if new exchange is being configured or Skip this step <br>
+				*. Select Registrar for Configuration by Going to Registrar Page and clicking the "Config" Button available in the row <br>
+				*. Create ICOM/s if new icom group is to be made. The acounts will be created in this ICOM/s <br>
+			<p class=""> <b > Phone Accounts Config. </b> <br>
+				*. Accounts for IP phone as well as Analogue phones can be added  <br>
+				*. Boss-Secratery, Byte icom no, Short codes and Secondary account may be assigned for already created Phone accounts  <br>
+				*. Conference facility may be provided for any number accordingly </p>
+			<p class=""> <b > Trunk Config. </b> <br> 
+				*. Add SIP gateways if any by providing Name and IP of the neighbour Server/SIP GW <br>
+				*. Add Analogue gateways if any by providing Name, IP and number of ports of the GW <br>
+				*. Phone numbers may be assigned to FXS gateway ports for autoconfiguration of fxs (*Future development)  <br>
+				*. Route can be added for different patterns by selecting the gateway. Alternate secondary path for each patters also may be added  
+				</p>
+			<p class=""> <b > Hunt Group. </b> <br> 
+				*. Not available now </p>
+			<p class=""> <b > Conference. </b> <br> 
+				*. Conference facility may be provided for any number accordingly </p>
+			<p class=""> <b > Save Configuration </b> <br> 
+				*. Can view the recent changes made </br>
+				*. by Clicking Save to Server button, All the changes will be copied to the VOIP server which is being configured and the services will be reloaded. </p>
+			<p class=""> <b > Change Password </b> <br> 
+				*. User may easily change the passsword of the account. </p>
+		</div>
+		<div class="w3-bar-block w3-large" id="contact">
+			<h3 class="w3-text-teal w3-bold w3-large w3-card w3-white"> Contacts </h3>
+					<b class="w3-bar-item w3-medium">Sagin K. SSE/T/PGT/SR : 9746763828</b> 
+					<b class="w3-bar-item w3-medium">Jharia . Instructor/T/IRISET : 9000841246</b>
+					
+				  </div>
+				  
+<? if(!isset($_SESSION['astuser'])){ ?>
+		<div class=" w3-display-topright w3-padding w3-text-grey w3-medium"  style="z-index:5" >
+			<div class="w3-bar ">
+				<a href="./" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Home</a>
+				<a href="./directory.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Directory</a>
+				
+				<div class="w3-dropdown-hover w3-border-right w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">Install</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="./uploads/Server installation Procedure to use RExCS.pdf" class="w3-bar-item w3-button" download>Server Installation Procedure</a>
+					<a href="./configfiles/install" class="w3-bar-item w3-button" download>REXCL Install file</a>
+					<a href="https://github.com/ptiriset/Asterisk" class="w3-bar-item w3-button">GitHub </a>
+				  </div>
+				</div>
+				<div class="w3-dropdown-hover w3-border-right  w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">Go To</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="http://10.195.2.19/" class="w3-bar-item w3-button">IRISET</a>
+					<a href="https://indianrailways.gov.in/" class="w3-bar-item w3-button">Indian Railways</a>
+					<a href="https://www.asterisk.org/" class="w3-bar-item w3-button">Asterisk</a>
+				  </div>
+				</div>
+				
+				<a href="./help.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Help</a>
+				<span class="w3-bar-item w3-right  w3-hide-medium w3-hide-small" id="timestamp" >IST [UTC+05.30]</span>
+
+			</div>
+		</div>	
+<? } ?>	
+			  
+</body>

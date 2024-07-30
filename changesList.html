@@ -1,0 +1,575 @@
+<?
+date_default_timezone_set('Asia/Kolkata');
+include("./createTables.php");
+include("./header.php");
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+$rootDirLoc="./";
+$rowColor=array(''=>'#C1EDEE',
+				'ip'=>'#D6EAF8 ',
+				'ip1'=>'#D6EAF8 ',
+				'ip2'=>'#FAE5D3',
+				'analog'=>'#FCF3CF',
+				'reg'=>'#D5F5E3 ',
+				'icom'=>'#D6EAF8 '
+				);
+
+$search="";
+$find="";
+$details="";
+
+if((isset($_GET['acc_type'])) && ($_GET['acc_type']!="")){
+	$category=$_GET['acc_type'];
+	$categoryList=array(
+					"$category"=>"$category"
+								);							
+} else {
+	$categoryList=array(
+					'ip'=>'ip',
+					'analog'=>'analog'
+								);
+}
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+$search.=" AND (requirement RLIKE '$find' OR purpose RLIKE '$find' OR location RLIKE '$find' OR status RLIKE '$find' OR hq_remark RLIKE '$find') ";
+}							
+if((isset($_GET['req_type'])) && ($_GET['req_type']!="")){
+$find=$_GET['req_type'];
+$search.=" AND req_type='$find' ";
+}							
+							
+if((isset($_GET['rly_no'])) && ($_GET['rly_no']!="")){
+$find=$_GET['rly_no'];
+$search.=" AND rly_no='$find' ";
+}														
+if((isset($_GET['acc_name'])) && ($_GET['acc_name']!="")){
+$details="show";
+$find=$_GET['acc_name'];
+$search=" AND acc_name='$find' ";
+}							
+if((isset($_GET['assigned'])) && ($_GET['assigned']!="")){
+$find=$_GET['assigned'];
+$search=" AND (assigned_to='$find' OR item_assigned_to='$find')";
+}							
+if((isset($_GET['status'])) && ($_GET['status']!="")){
+if($_GET['status']=="pending"){ 
+$search.=" AND status='pending' ";
+} else { $search=" AND status!='pending' ";}
+}							
+//print $search;
+?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+function myFunction() {
+  var x = document.getElementById("Demo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 5px;
+  font-size: 20px;
+  z-index: 2;
+  overflow: visible;
+}
+tr.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60;
+  padding: 5px;
+  font-size: 20px;
+}
+din.demo{
+ z-index: 1;
+ }
+</style>
+<body style="background:#EBF5FB ">
+<?			
+//------------------------------------------------------------------------ Registrar List -----------------------------------------//			
+			
+			
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		//----------------- get comitted_on ----------
+		
+		$q="SELECT committed_on FROM $regTable where rly='$rly' and divn='$divn' and id='$registrar'";
+		$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+						$committed_on=$d['committed_on'];
+				}}
+				
+		$q="SELECT * FROM $regTable where rly='$rly' and divn='$divn' and id='$registrar' and updated_on > committed_on ";
+		$q.=$search;
+		$q.=" ORDER BY reg1_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large"> Changes in Registrar </div>
+		  
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="5%">S.N</th>
+					<th width="30%" style="text-transform:uppercase;border-left:1px solid white">Registrar</th> 
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">IPs</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">STD Codes</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Length of Number</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Server Make</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+						$committed_on=$d['committed_on'];
+				?>
+				<tr  valign="top"  style="background:#D6EAF8 ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="30%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Name:<b class='w3-medium w3-text-blue'>".$d['reg1_name']."</b><br> Location:<b class='w3-medium w3-text-blue'>".$d['location']."</b>";?>
+					</td>
+					
+					<td width="25%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Primary:<b class='w3-medium w3-text-blue'>".$d['reg1_ip']."</b><br> Secondary:<b class='w3-medium w3-text-blue'>".$d['reg2_ip']."</b>";?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Railway:<b class='w3-medium w3-text-blue'>".$d['rly_code']."</b><br> PSTN:<b class='w3-medium w3-text-blue'>".$d['pstn_code']."</b>";?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Railway:<b class='w3-medium w3-text-blue'>".$d['rly_no_length']."</b><br> I.Com:<b class='w3-medium w3-text-blue'>".$d['icom_no_length']."</b><br> PSTN:<b class='w3-medium w3-text-blue'>".$d['pstn_no_length']."</b>";?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['serv_make'];?>
+					</td>
+					
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			
+//----------------------------------------------------------- Registrar page ends------------------------------------------------//
+
+//------------------------------------------------------------- Icom page  -----------------------------------------//			
+			
+			
+		$q="SELECT * FROM $icomTable where server_id = $registrar AND updated_on > '$committed_on' ";
+		$q.=$search;
+		$q.=" ORDER BY icom_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div width="70%" >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large"> Changes in Intercom</div>
+		  
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Intercom Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Department</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">No. of IP phones</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">No. of Analogue Phones</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  style="background:#D6EAF8;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['icom_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['department'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? //print $d['user_id2'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? //print $d['password2'];?>
+					</td>
+					
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+
+<?			
+//------------------------------------------------------------------------ ipphone -----------------------------------------//			
+			
+		$q="SELECT * FROM $accTable where acc_type = 'ip' and server_id= $registrar AND updated_on > '$committed_on' ";
+		$q.=$search;
+		$q.=" ORDER BY rly_no DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large">Changes in IP Phones </div>
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="5%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Numbers</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">I.com</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Short Codes</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Phone</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">PS Name</th>
+					<th width="5%" style="text-transform:uppercase;border-left:1px solid white">VLAN</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  style="background:#D6EAF8;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "<b class='w3-medium w3-text-blue'>".$d['acc_name']."</b><br> Display Name:<b class='w3-medium w3-text-blue'>".$d['disp_name']."</b>";?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Railway:<b class='w3-medium w3-text-blue'>".$d['rly_no']."</b><br> I.COM:<b class='w3-medium w3-text-blue'>".$d['icom_no']."</b><br> PSNT:<b class='w3-medium w3-text-blue'>".$d['pstn_no']."</b>";?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$icom_name=$d['icom_name'];
+							if ($icom_name!=""){
+								$q1="SELECT * FROM $icomTable where id = $icom_name ";
+								$s1=mysqli_query($conn,$q1);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print $d1['icom_name'];
+							}}}
+							?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Short Code:<b class='w3-medium w3-text-blue'>".$d['map_no']."</b><br> Byte I.COM:<b class='w3-medium w3-text-blue'>".$d['byte_no']."</b>";?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['phone']."<br>".$d['mac'];?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$ps_no=$d['ps_no'];
+							if ($ps_no!=""){$q1="SELECT * FROM $accTable where id = $ps_no ";
+							$s1=mysqli_query($conn,$q1);
+							if(!(!$s1) || mysqli_num_rows($s1)>0){
+							while($d1=mysqli_fetch_assoc($s1)){ 
+							print $d1['acc_name']."<br>".$d1['ps_type'];
+							}}}
+							?>
+					</td>
+					<td width="5%" style="text-transform:uppercase;text-align:center;border-left:1px solid #F8F9F9">
+						<? print $d['acc_vlan'];?>
+					</td>
+
+				</tr>
+	<?		}
+		}else {
+			 ?>
+			 <tr class="w3-text-white w3-small"  style="text-align:left;background:white" valign="top">
+					<td colspan=12 width="5%">No entries</th>
+				</tr>
+				<?
+			}?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			
+//----------------------------------------------------------- ipphone1 page ends------------------------------------------------//
+
+//------------------------------------------------------------- IP2 page  -----------------------------------------//			
+			
+			
+		$q="SELECT * FROM $accTable where acc_type = 'ip1' AND server2!='' and server_id= $registrar AND updated_on > '$committed_on' ";
+		$q.=$search;
+		$q.=" ORDER BY rly_no DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div width="70%" >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large"> Changes in Seconday Accounts</div>
+		   
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">IP phone Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Second SIP Server</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">User ID</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">PW</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  style="background:#D6EAF8;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['acc_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['server2'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['user_id2'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['password2'];?>
+					</td>
+
+				</tr>
+	<?		}
+		}
+			else {
+			 ?>
+			 <tr class="w3-text-white w3-small"  style="text-align:left;background:white" valign="top">
+					<td colspan=12 width="5%">No entries</th>
+				</tr>
+				<?
+			}?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			
+	//----------------------------------------------------------- IP2 page ends-------------------------------------------------------------------------//
+//------------------------------------------------------------- Boss Secratery  -----------------------------------------//			
+			
+			
+		$q="SELECT * FROM $accTable where acc_type = 'ip1' AND ps_no!='' and server_id= $registrar AND updated_on > '$committed_on' ";
+		$q.=$search;
+		$q.=" ORDER BY rly_no DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div width="70%" >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large"> Changes in Boss - Secy List</div>
+		  
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="5%">S.N</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Boss Name</th> 
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Boss Number</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">I.Com Name</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">PS Name</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">PS Number</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">PS Type</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  style="background:#D6EAF8;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['acc_name'];?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['rly_no']."<br>".$d['icom_no'];?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['icom_name'];?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$ps_no=$d['ps_no'];
+							$q1="SELECT * FROM $accTable where id = $ps_no ";
+							$s1=mysqli_query($conn,$q1);
+							if(!(!$s1) || mysqli_num_rows($s1)>0){
+							while($d1=mysqli_fetch_assoc($s1)){ 
+							print $d1['acc_name'];
+							
+							?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+							<? print $d1['rly_no']. "<br>".$d1['icom_no']; }}?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['ps_type'];?>
+					</td>
+
+				</tr>
+	<?		}
+		}else {
+			 ?>
+			 <tr class="w3-text-white w3-small"  style="text-align:left;background:white" valign="top">
+					<td colspan=12 width="5%">No entries</th>
+				</tr>
+				<?
+			}?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+	//----------------------------------------------------------- Boss-Secy page ends-------------------------------------------------------------------------//
+	//------------------------------------------------------------- Analogue Phone  -----------------------------------------//			
+			
+			
+		$q="SELECT * FROM $accTable where acc_type = 'analog' and server_id= $registrar AND updated_on > '$committed_on' ";
+		$q.=$search;
+		$q.=" ORDER BY rly_no DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div width="70%" >
+		<div class="w3-bar w3-border w3-round-large" style="background:#EBF5FB ">
+		  <div class="w3-bar-item w3-large"> Changes in Analogue Phone List</div>
+		  
+		</div>
+				
+			<table class="w3-table w3-small w3-border w3-round-large" style="word-break:keep-all;padding-top:200px">
+				<tr class="w3-text-white w3-small"  style="text-align:left;background:#5499C7" valign="top">
+					<th width="5%">S.N</th>
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">Name</th> 
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">Numbers</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">I.com</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Short Codes</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">FXS Port</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">PS No</th>
+					<th width="5%" style="text-transform:uppercase;border-left:1px solid white">VLAN</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  style="background:#D6EAF8;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "<b class='w3-medium w3-text-blue'>".$d['acc_name']."</b><br> Display Name:<b class='w3-medium w3-text-blue'>".$d['disp_name']."</b>";?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Railway:<b class='w3-medium w3-text-blue'>".$d['rly_no']."</b><br> I.COM:<b class='w3-medium w3-text-blue'>".$d['icom_no']."</b><br> PSNT:<b class='w3-medium w3-text-blue'>".$d['pstn_no']."</b>";?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$icom_name=$d['icom_name'];
+							if ($icom_name!=""){
+								$q1="SELECT * FROM $icomTable where id = $icom_name ";
+								$s1=mysqli_query($conn,$q1);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print $d1['icom_name'];
+							}}}
+							?>
+					</td>
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print "Short Code:<b class='w3-medium w3-text-blue'>".$d['map_no']."</b><br> Byte I.COM:<b class='w3-medium w3-text-blue'>".$d['byte_no']."</b>";?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['gw_port_name']." : ".$d['gw_port'];?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['ps_no']."<br>".$d['ps_type'];?>
+					</td>
+					
+					<td width="5%" style="text-transform:uppercase;text-align:center;border-left:1px solid #F8F9F9">
+						<? print $d['acc_vlan'];?>
+					</td>
+
+				</tr>
+	<?		}
+		}else {
+			 ?>
+			 <tr class="w3-text-white w3-small"  style="text-align:left;background:white" valign="top">
+					<td colspan=12 width="5%">No Entries</th>
+			</tr>
+			<?
+			}?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			
+	//----------------------------------------------------------- Boss-Secy page ends-------------------------------------------------------------------------//
+	} else{      //-------------------------- Choose Server
+			Print "<b class='w3-xlarge  w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' > From Here </a></b> ";
+			}
+			?>
+
+
+</body>

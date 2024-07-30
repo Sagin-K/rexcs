@@ -1,0 +1,280 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content='REXCS'/>
+<meta property="og:image" content="/images/rexcs8.jpg" />
+<meta property="og:description" content="Railways' Exchange Configuration System : Unified application for Indian Railways' Asterisk based Exchange Management" />
+<meta property="og:url" content="http://rexcs.railnet.gov.in"/>
+<meta property="og:image:width" content='1200' />
+<meta property="og:image:height" content='627' />
+
+<meta property="og:type" content='website'/>
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./jquery/jquery-ui.css">
+<script src="./jquery/jquery-1.10.2.js"></script>
+<script src="./jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./jquery/style.css">
+<link rel="stylesheet" href="./indexStyle.css">
+<script src="./jscriptsrc/clock.js"></script>
+<script src="./taskListQuickAction.js"></script>
+<script src="./index1.js"></script>
+<script src="./login1.js"></script>
+<script src="https://kit.fontawesome.com/5a41c71499.js" crossorigin="anonymous"></script>
+
+<script>
+
+$(document).ready(function() {
+    setInterval(timestamp, 1000);
+});
+
+function timestamp() {
+    $.ajax({
+        url: './timestamp.php',
+        success: function(data) {
+			//alert (data);
+            $('#timestamp').html(data);
+        },
+    });
+}
+
+
+
+function formatDate(id){
+	var d=document.getElementById(id).value;
+	//alert("Note Date:"+d);
+	if(d.indexOf('/')>=0){
+		var tmp=d.split('/');
+		x=tmp[2]+"-"+tmp[0]+"-"+tmp[1];
+		document.getElementById(id).value=x;
+	}
+	return;
+}
+
+</script>
+<title>REXCS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: serif}
+</style>
+
+<?
+include('./header.php');
+include("./createTables.php");
+include("./userAccess.php");
+
+//astUserTable();
+$page="dashboard";
+$acc_type="";
+$searchStr="";
+$pageName=array(''=>'',
+				'ip'=>'IP Phones ',
+				'ip2'=>'Secondary Acc.',
+				'analog'=>'Analogue Phones',
+				'bs'=>'Boss-Secy',
+				'parallel'=>'Parallel Connection',
+				'map'=>'Short Code',
+				'byte'=>'Byte No.',
+				'reg'=>'Registrars',
+				'icom'=>'Intercoms',
+				'route'=>'Routes',
+				'gw'=>'Gateways',
+				'hunt'=>'Hunt Group',
+				'exch'=>'Exchanges',
+				'sip'=>'SIP Gateways',
+				'conf'=>'Conferences',
+				'vm'=>'Voicemail',
+				'rec'=>'Call recording'
+				
+							);
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$searchStr=$_GET['search'];
+}
+if (isset($_GET['page'])){
+$page=$_GET['page'];
+}
+if (isset($_GET['acc_type'])){
+$acc_type=$_GET['acc_type'];
+}
+//session_start();
+	$q="select * from $logTable where action='LOGIN' ";
+	$s=mysqli_query($conn,$q);
+	//	print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		$count=mysqli_num_rows($s);
+		}
+		
+		
+///////////////////////////////////////////////////////////////
+?>
+</head>
+<body  onload="filterData('0','page','<? print $page;?>','<? print $acc_type;?>');display_ct();" style="background:#FBFCFC ">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-small w3-text-white" style="z-index:3;width:250px;background:#18303c;font-family: Tahoma;" id="mySidebar" name="mySidebar"><br>
+
+<? if(isset($_SESSION['registrar'])){ ?>
+	<div class="w3-xxlarge w3-left w3-padding" style="margin-top:2%;margin-left:2%">
+		<span style="font-family: Georgia, serif;text-shadow: 2px 2px 2px #E5AA70;color:#FFF8DC;" ><b>RExCS</b></span>
+	</div>
+<? } else { ?>	
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-left w3-padding" >
+	 <span class=" w3-large w3-text-blue" ><img src="./images/rexcs8.jpg" style="width:100%"></span>
+	</div>
+ <? } ?>
+ 
+  <div class="w3-container">
+    <h5><a href="#" class="w3-bar-item w3-button w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" ><i class="fa fa-remove fa-fw"></i>  Close Menu</a></h5>
+  </div>
+  <i  class="w3-bar-item w3-opacity-max w3-button w3-padding w3-hover-border w3-hover-none w3-hover-text-light-blue "><i class="fa fa-user" aria-hidden="true"></i>  Page Visits - <? print $count; ?></i>
+	
+  <? if ($acc_type!="" || ((isset($_SESSION['astuser']) && $access=="admin") && $page=="users")){ ?>
+	<div class="w3-left w3-button w3-padding w3-hover-none" > <input id="search" class="w3-medium w3-text-white w3-border w3-round w3-opacity w3-hover-border-white" style="background:#18303c;" placeholder=" Search <? print $pageName[$acc_type];?>" onkeyup="filterData('3','page','<? print $page;?>','<? print $acc_type;?>');"><? print $searchStr;?></input></div>
+  <? } ?>
+<div class="w3-bar-block">
+	<? if(isset($_SESSION['astuser']) && $access=="admin"){ ?>
+	<a href="./index.html?page=dashboard2" class="w3-bar-item w3-button w3-padding  w3-hover-none w3-hover-text-light-blue "> <i class="fa fa-tachometer fa-fw"></i> Admin Dashboard </a>
+	<? }?>
+	<? if(isset($_SESSION['registrar'])){ ?>
+	<a href="#" class="w3-bar-item w3-button w3-padding dropdown-btn  w3-hover-none w3-hover-text-light-blue "> <i class="fa fa-user-circle-o fa-fw"></i> Accounts Configuration <i class="w3-right">&#8801;</i></a>
+		<div class="dropdown-container w3-padding " style="display:block">
+			<a href="./index.html?page=reg&acc_type=icom" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue"><i class="fa-solid fa-phone"></i>&#9813;  Intercoms</a>
+			<a href="./index.html?acc_type=ip&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#x265A; SIP Numbers </a>
+			<a href="./index.html?acc_type=analog&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9819;  Analogue Numbers </a>
+			<a href="./index.html?acc_type=ip2&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9820; SIP Account 2 </a>
+			<a href="./index.html?acc_type=bs&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9821; Boss-Secy </a>
+			<a href="./index.html?acc_type=map&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9822; Short Codes </a>
+			<a href="./index.html?acc_type=byte&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9823; Byte Intercom </a>
+			<a href="./index.html?acc_type=parallel&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9823; parallel Connection </a>
+			<a href="./index.html?acc_type=vm&page=ipphone" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue">&#9823; Voicemail </a>
+		</div>
+	<a href="#" class="w3-bar-item w3-button w3-padding  dropdown-btn w3-hover-none w3-hover-text-light-blue "> <i class="fa fa-sitemap fa-fw"></i> Trunk Configuration  <i class="w3-right">&#8801;</i></a>
+		<div class="dropdown-container w3-padding " style="display:block">
+			<a href="./index.html?page=reg&acc_type=sip" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue"> <i class="fa fa-exchange fa-fw"></i> SIP Gateways </a>
+			<!--a href="./index.html?page=reg&acc_type=gw" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue"> <i class="fa fa-exchange fa-fw"></i>  Analog Gateways </a-->
+			<a href="./index.html?page=reg&acc_type=route" class="w3-bar-item w3-button w3-padding w3-hover-pale-blue"> <i class="fa fa-arrows fa-fw"></i>  Routes </a>
+		</div>
+	<a href="./index.html?acc_type=conf&page=reg" class="w3-bar-item w3-button w3-padding  w3-hover-none w3-hover-text-light-blue "><i class="fa fa-users fa-fw"></i> Conferences </a>
+	<a href="./index.html?page=config"  class="w3-bar-item w3-button w3-padding  w3-hover-none w3-hover-text-light-blue "><i class="fa fa-floppy-o fa-fw"></i>  Save Config</a>
+		<? } else {
+		print "<b class='w3-bar-item w3-button w3-padding w3-hover-none w3-hover-text-grey'> Please select a registrar to configure. Or create a new registrar</b>";
+		}
+		if(isset($_SESSION['astuser']) && $access=="admin"){ ?>
+		<a href="#" class="dropdown-btn  w3-bar-item w3-button w3-padding  w3-hover-none w3-hover-text-light-blue"><i class="fa fa-diamond fa-fw"></i>  Admin Module</a>
+			<div id="dropdwn" class="dropdown-container w3-padding  w3-hover-none w3-hover-text-light-blue">
+				<a href="./index.html?page=users" onclick="w3_close" class="w3-bar-item w3-button w3-hover-pale-blue">users</a>
+				<a href="#" onclick="addPages('0','update','update','nil');" class="w3-bar-item w3-button w3-hover-pale-blue">Add Updates</a>
+			</div>
+		<? }?>
+	<a href="./tccs/" onclick="w3_close" class="w3-bar-item w3-button w3-hover-pale-blue">TCCS</a>
+	<a href="./index.html?page=onboard"  class="w3-bar-item w3-button w3-hover-pale-blue">On-Board Status</a>
+							
+</div> 
+</nav>
+
+<!-- Top container -->
+<div class="w3-bar w3-large" style="width:85%;z-index:2;background:#FDFEFE;overflow:visible;">
+  <button class="w3-bar-item w3-button w3-hide-large w3-left w3-hover-text-light-grey  w3-text-blue" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  	<div class=" w3-display-topright w3-padding w3-text-grey w3-medium"  style="z-index:5" >
+			<div class="w3-bar ">
+				<a href="./" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Home</a>
+				<a href="./index.html?page=directory" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Directory</a>
+				<a href="./index.html?page=updates"  class="w3-bar-item w3-button w3-border-right w3-hover-blue">Updates</a>
+				<a href="./index.html?page=features"  class="w3-bar-item w3-button w3-border-right w3-hover-blue">Feature Codes</a>
+				<!--div class="w3-dropdown-hover w3-border-right  w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">Go To</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="http://10.195.2.19/" class="w3-bar-item w3-button">IRISET</a>
+					<a href="https://indianrailways.gov.in/" class="w3-bar-item w3-button">Indian Railways</a>
+					<a href="https://www.asterisk.org/" class="w3-bar-item w3-button">Asterisk</a>
+				  </div>
+				</div-->
+				
+				<a href="./index.html?page=help" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Help</a>
+				<span class="w3-bar-item w3-right  w3-hide-medium w3-hide-small" id="timestamp" ></span>
+				<? if(isset($_SESSION['astuser'])){ ?>
+				<div class="w3-dropdown-hover w3-border-right">
+				  <button class="w3-button w3-hover-blue"><strong><? print $username;?></strong></button>
+					<div class="w3-dropdown-content w3-bar-block w3-card-4">
+						<a href="loginCheck.php?action=logout" class="w3-bar-item w3-button"> <i class="fa fa-sign-out fa-fw"></i> Logout </a>
+						<a href="#" onclick="addPage('1','user','change','<? print $userid;?>');" class="w3-bar-item w3-button"> <i class="fa fa-key" aria-hidden="true"></i>  Change Password </a>
+					</div>
+				</div>
+					
+				<?} else{ ?>
+					<span class="w3-bar-item w3-small w3-right w3-text-blue">please <strong><a href="#" class="w3-bar-item w3-button"><i class="fa fa-sign-in"></i> Login</a></strong></span>
+				<?}?>
+			</div>
+	</div>
+		
+	
+</div>
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+		
+<!--------------------------- !PAGE CONTENT! ------------------------------------------>
+<div class="main w3-main" style="margin-left:260px;margin-right:2%;overflow-x: auto;height:95%;overflow:auto;">
+	
+	<div id="main">
+		<br><br><br>
+		<div class="w3-middle w3-opacity w3-center "><img src="./images/friends-loading.gif" style="width:600px;height:600px;"></div>
+	</div>
+<!------------------- End page content ---------------------------------->
+</div>
+
+<div id="id01" class="modal"> 
+	
+	<div class="modal-content animate" >
+		<!--------------------------- Popup Page CONTENT! ------------------------------------------>
+		<div class="w3-small" style="overflow-x: auto;height:85%;overflow:auto;width:100%"  >
+			
+			<div id="popup" style="width:100%;">
+				
+			</div>
+		<!------------------- End page content ---------------------------------->
+		</div>
+		
+	</div>
+	<input id="exit" style="display:block" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class=" w3-display-topright w3-white w3-button w3-text-red w3-hover-red w3-hover-text-white w3-border  w3-border-red" >
+	
+</div>
+
+<script>
+var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "block";
+    }
+  });
+}
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

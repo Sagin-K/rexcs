@@ -1,0 +1,132 @@
+<html>
+<title>Block List</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./../w3.css">
+<link rel="stylesheet" href="./../jquery/jquery-ui.css">
+<script src="./../jquery/jquery-1.10.2.js"></script>
+<script src="./../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../jquery/style.css">
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+
+
+html,body,h1,h2,h3,h4,h5 {font-family: serif
+}
+input[type=text], select {
+  width: 100%;
+  margin: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+select {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  
+}
+
+/* For IE10 */
+select::-ms-expand {
+  display: none;
+  
+}
+</style>
+
+<body style="background:#EBF5FB">
+<?
+date_default_timezone_set('Asia/Kolkata');
+$rootDirLoc="./";
+//session_start();
+include('./userAccess.php');
+$dbName="iriset";
+$page="";
+if((isset($_GET['page'])) && ($_GET['page']!="")){
+$page=$_GET['page'];
+if((isset($_GET['day'])) && ($_GET['day']!="")){
+$mnth=$_GET['month'];
+$day=$_GET['day'];
+$month="'2020-".$_GET['month']."-".$_GET['day']."'";
+$search.=" AND Month(reqd_date)= Month($month) AND Day(reqd_date)= Day($month) ";
+//echo $month;
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['page']=="directory"){
+include ('./directory.html');
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['page']=="dashboard2"){
+include ('./dashboard2.html');
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['page']=="dashboard"){
+include ('./dashboard.html');
+}
+//////////////////////////////////////////////////////// Onboard ///////
+if($_GET['page']=="onboard"){
+include ('./onboardstatus.html');
+}
+//////////////////////////////////////////////////////// Assets/Exchanges ///////
+elseif($_GET['page']=="reg"){
+	include ('./servList.html');
+}
+//////////////////////////////////////////////////////// ipphone ///////
+elseif($_GET['page']=="ipphone"){
+include ('./accList.html');
+}
+//////////////////////////////////////////////////////// saveconf ///////
+elseif($_GET['page']=="saveconf"){
+include ('./saveConfig.php');
+}
+//////////////////////////////////////////////////////// changes ///////
+elseif($_GET['page']=="changes"){
+include ('./changesList.html');
+}
+//////////////////////////////////////////////////////// config ///////
+elseif($_GET['page']=="config"){
+include ('./configPage.html');
+}
+//////////////////////////////////////////////////////// users ///////
+elseif($_GET['page']=="updates"){
+include ('./updateList.html');
+}
+//////////////////////////////////////////////////////// updates ///////
+elseif($_GET['page']=="users"){
+include ('./userList.html');
+}
+//////////////////////////////////////////////////////// rexcl ///////
+elseif($_GET['page']=="rxcl"){
+include ('./rexclConfig.php');
+}
+//////////////////////////////////////////////////////// rexcs ///////
+elseif($_GET['page']=="rxcl2"){
+include ('./rexclConfig2.php');
+}
+//////////////////////////////////////////////////////// rexcs ///////
+elseif($_GET['page']=="features"){
+include ('./featureList.html');
+}
+
+//////////////////////////////////////////////////////// help ///////
+elseif($_GET['page']=="help"){
+include ('./help.html');
+}
+//////////////////////////////////////////////////////// features ///////
+
+}?>
+</body>
+</html>

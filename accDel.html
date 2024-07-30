@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./../w3.css">
+<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+<script src="./../../jquery/jquery-1.10.2.js"></script>
+<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../../jquery/style.css">
+<script src="./datepicker.js"></script>
+<script src="./index1.js"></script>
+<?
+include("./createTables.php");
+include("./userAccess.php");
+include("./header.php");
+//$department=$_SESSION['dept'];
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+?>
+<style>
+body {
+  font-family: Arial;
+  font-size: 12px;
+  padding: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 8px;
+}
+
+.container {
+ 
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text], select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+
+
+<title> Delete</title>
+</head>
+
+<body>
+<?
+//--------------------- check whether Server is selected or not --
+	
+//--------------------------------------------------------------
+if(isset($_GET['id']) && $_GET['id']!=""){
+
+	$id=$_GET['id'];
+	$page="Delete";
+	
+	$action="ip";
+	if(isset($_GET['action']) && $_GET['action']!=""){
+	$action=$_GET['action'];
+	}
+	
+?>
+<div class="row">
+  <div class="col-75">
+ 
+    <div id="main" class="container">
+		<input type="hidden" id="id" value="<? print $id;?>">
+		<input type="hidden" id="rly" value="<? print $rly;?>">
+		<input type="hidden" id="divn" value="<? print $divn;?>">
+		<input type="hidden" id="updated_by" value="<? print $userid;?>">
+	<table width=100%>
+		 
+<?	
+	
+	if ($action=="reg"){
+		$no_of_accounts="0";
+		$no_of_icoms="0";
+		$q="SELECT * FROM $regTable WHERE id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+			$reg1_name=$d['reg1_name'];
+			$reg1_ip=$d['reg1_ip'];
+			$location=$d['location'];	
+		}}
+		$q="SELECT COUNT(DISTINCT icom_name) AS count FROM $icomTable WHERE server_id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s)){
+		while($d=mysqli_fetch_assoc($s)){
+			$no_of_icoms=$d['count'];	
+		}}
+		$q="SELECT COUNT(DISTINCT acc_name) AS count FROM $accTable WHERE server_id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s)){
+		while($d=mysqli_fetch_assoc($s)){
+			$no_of_accounts=$d['count'];	
+		}}
+		
+	?>
+			
+	<!----------------------------- Reg Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page; ?> Registrar </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $reg1_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Location </label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $location; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> IP </label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $reg1_ip; ?></td></tr>
+				
+				<tr><td colspan=2  class="w3-border-bottom w3-border-bottom-brown w3-center w3-text-red"><label for="pattern"><i class="fa fa-trash" aria-hidden="true"></i> The following also will be deleted.</label></td>
+				</tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Number of ICOMs</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $no_of_icoms; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Number of Accounts </label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $no_of_accounts; ?></td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+				<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red" >
+				<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- REg Del Ends--------------------------------------------->			
+				
+	<?	}
+elseif(isset($_SESSION['registrar'])){
+	$registrar=$_SESSION['registrar'];
+	$server_id=$_SESSION['registrar'];
+	
+	if ($action=="ip" || $action=="analog" || $action=="ip2" || $action=="bs" ||$action=="parallel" || $action=="vm" || $action=="byte" || $action=="map"){
+		$q="SELECT * FROM $accTable where id = $id and server_id= $registrar";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){ 
+	
+			$acc_type=$d['acc_type'];
+			$acc_name=$d['acc_name'];
+			$icom_name=$d['icom_name'];
+			$disp_name=$d['disp_name'];	
+			$icom_no=$d['icom_no'];
+			$secret1=$d['secret1'];
+			$rly_no=$d['rly_no'];
+			$pstn_no=$d['pstn_no'];
+			$server2=$d['server2'];
+			$user_id2=$d['user_id2'];
+			$password2=$d['password2'];
+			$mac=$d['mac'];
+			$phone=$d['phone'];
+			$ps_no=$d['ps_no'];
+			$parallel_num1=$d['parallel_num1'];
+			$parallel_num2=$d['parallel_num2'];
+			$parallel_num3=$d['parallel_num3'];
+			$parallel_num4=$d['parallel_num4'];
+			$ps_type=$d['ps_type'];
+			$acc_vlan=$d['acc_vlan'];
+			$gw_id=$d['gw_id'];
+			$gw_port=$d['gw_port'];
+			$gw_port_name=$d['gw_port_name'];
+			$map_no=$d['map_no'];
+			$byte_no=$d['byte_no'];
+			$remark=$d['remark'];
+		}}
+	}
+	elseif ($action=="gw" || $action=="sip"){
+		$q="SELECT * FROM $gwTable WHERE id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+			$type=$d['type'];
+			$port=$d['port'];
+			$gw_ip=$d['gw_ip'];
+			$gw_name=$d['gw_name'];	
+		}}
+	}
+	elseif ($action=="conf"){
+		$q="SELECT * FROM $confTable WHERE id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+			$conf_name=$d['conf_name'];
+			$conf_no=$d['conf_no'];
+			$conf_admin=$d['conf_admin'];
+			$conf_type=$d['conf_type'];	
+			$remark=$d['remark'];	
+		}}
+	}
+
+	elseif ($action=="route"){
+		$gw_id2 ;
+		$q="SELECT * FROM $routeTable WHERE id = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+			$route_name=$d['route_name'];
+			$pattern=$d['pattern'];
+			$gw_id1=$d['gw_id1'];
+			$gw_id2=$d['gw_id2'];
+			$transform1=$d['transform1'];
+			$transform2=$d['transform2'];
+			$trans_no1=$d['trans_no1'];
+			$trans_no2=$d['trans_no2'];
+		}}
+		if( $gw_id1 !=""){
+			$q="SELECT * FROM $gwTable WHERE id = $gw_id1 ";
+			$s=mysqli_query($conn,$q);
+			//print mysqli_error($conn);
+			if(!(!$s) || mysqli_num_rows($s)>0){
+			while($d=mysqli_fetch_assoc($s)){
+				$gw_id1=$d['gw_name'];
+			}}}
+		if( $gw_id2 !="N.A"){
+			$q="SELECT * FROM $gwTable WHERE id = $gw_id2 ";
+			$s=mysqli_query($conn,$q);
+			//print mysqli_error($conn);
+			if(!(!$s) || mysqli_num_rows($s)>0){
+			while($d=mysqli_fetch_assoc($s)){
+				$gw_id2=$d['gw_name'];
+		}}}
+	}
+
+	elseif ($action=="icom"){
+			$q="SELECT * FROM $icomTable WHERE id = $id ";
+			$s=mysqli_query($conn,$q);
+			//print mysqli_error($conn);
+			if(!(!$s) || mysqli_num_rows($s)>0){
+			while($d=mysqli_fetch_assoc($s)){
+				$icom_name=$d['icom_name'];
+				$department=$d['department'];
+				$vlan=$d['vlan'];	
+			}}
+			
+		$q="SELECT COUNT(DISTINCT acc_name) AS count FROM $accTable WHERE icom_name = $id ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s)){
+		while($d=mysqli_fetch_assoc($s)){
+			$no_of_accounts=$d['count'];	
+		}}
+		
+	}
+
+	$updated_by="";
+	$mnth=date('n', time());
+	$year=date('Y', time());
+//--------------------------------------------------------------
+
+
+
+			if ($action=="ip"){ ?>
+			<input type="hidden" id="server_id" value="<? print $server_id;?>">
+		
+		<!--------------------------------------IP Phone Del-------------------------------------------------------->
+				<tr><td colspan=2  class="w3-center">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?>  IP Phone Number </h3>
+				<input type="hidden" id="acc_type" value="ip"></td></tr>
+		
+				
+		
+				<tr><td  width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i> IP Phone Name</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				
+				<tr><td><label for="icom_name"><i class="fa fa-modx" aria-hidden="true"></i> Intercome Name</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $icom_name; ?></td></tr>
+				
+				<tr><td><label for="disp_name"><i class="fa fa-modx" aria-hidden="true"></i> Display Name</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $disp_name; ?></td></tr>
+				
+				<tr><td><label for="mac"><i class="fa fa-modx" aria-hidden="true"></i> MAC ID</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $mac; ?></td></tr>
+				
+				<tr><td><label for="phone"><i class="fa fa-modx" aria-hidden="true"></i> IP Phone Model</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $phone; ?></td></tr>
+				
+				<tr><td><label for="icom_no"><i class="fa fa-modx" aria-hidden="true"></i> Intercom Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $icom_no; ?></td></tr>
+				
+				<tr><td><label for="rly_no"><i class="fa fa-modx" aria-hidden="true"></i> Railwy Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $rly_no; ?></td></tr>
+				
+				<tr><td><label for="pstn_no"><i class="fa fa-modx" aria-hidden="true"></i> PSTN Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $pstn_no; ?></td></tr>
+						
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+				
+	<!----------------------------- IP Phone Del Ends--------------------------------------------->	
+		<? } elseif ($action=="ip2"){ ?>
+	<!----------------------------- IP 2 Del --------------------------------------------->	
+				<tr><td colspan=2  class="w3-center">
+				<h3 style="text-transform:uppercase;" align=center> <? print $page;?> Secondary Server </h3>
+				<input type="hidden" id="acc_type" value="ip"></td></tr>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td width=40%><label for="accID"><i class="fa fa-modx" aria-hidden="true"></i> IP Phone Name</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				<tr><td><label for="server2"><i class="fa fa-modx" aria-hidden="true"></i> Second SIP Server</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $server2; ?></td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');" value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+					
+	<!----------------------------- IP2 Del Ends--------------------------------------------->	
+		<? } elseif ($action=="bs"){ ?>
+	<!----------------------------- Boss-Secy Del --------------------------------------------->			
+	
+				<tr><td colspan=2  class="w3-center"><h3 style="text-transform:uppercase;" align=center> Boss-Secy Account</h3></td></tr>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td width=40%><label for="accID"><i class="fa fa-modx" aria-hidden="true"></i> Boss Phone Name</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				<tr><td><label for="ps_type"><i class="fa fa-modx" aria-hidden="true"></i> B-S Type</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $ps_type; ?></td></tr>
+				
+				<tr><td><label for="ps_no"><i class="fa fa-modx" aria-hidden="true"></i> PS Name</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $ps_no; ?></td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+	<!----------------------------- Boss-Secy del Ends--------------------------------------------->	
+		<? } elseif ($action=="parallel"){ ?>
+	<!----------------------------- Parallel Del --------------------------------------------->			
+	
+				<tr><td colspan=2  class="w3-center"><h3 style="text-transform:uppercase;" align=center> Parallel Numbers</h3></td></tr>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td width=40%><label for="accID"><i class="fa fa-modx" aria-hidden="true"></i> Main account</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				
+				<tr><td><label for="parallel_num"><i class="fa fa-modx" aria-hidden="true"></i> Parallel Numbers</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $parallel_num1; ?><br>
+				<? print $parallel_num2; ?><br>
+				<? print $parallel_num3; ?><br>
+				<? print $parallel_num4; ?>
+				</td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+	<!----------------------------- Parallel del Ends--------------------------------------------->	
+		<? } elseif ($action=="vm"){ ?>
+	<!----------------------------- Parallel Del --------------------------------------------->			
+	
+				<tr><td colspan=2  class="w3-center"><h3 style="text-transform:uppercase;" align=center> Voicemil feacility</h3></td></tr>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td width=40%><label for="accID"><i class="fa fa-modx" aria-hidden="true"></i> Account </label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+	<!----------------------------- Parallel del Ends--------------------------------------------->	
+		<? } elseif ($action=="map"){ ?>
+	<!----------------------------- Short Code Del --------------------------------------------->			
+	
+				<h3 style="text-transform:uppercase;" align=center> Short Code</h3>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td width=40%><label for="map_no"><i class="fa fa-modx" aria-hidden="true"></i> Short Code</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $map_no; ?></td></tr>
+				
+				<tr><td><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i> Name</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $acc_name; ?></td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+	<!----------------------------- Short Code Del Ends--------------------------------------------->	
+		<? } elseif ($action=="byte"){ ?>
+	<!----------------------------- Byte Del --------------------------------------------->			
+	
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page;?> Byte - Intercom Number</h3>
+				</td></tr>
+				
+				<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		
+				<tr><td><label for="accID" width=40%><i class="fa fa-modx" aria-hidden="true"></i> Phone Name</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?>
+				
+				<tr><td><label for="ps_type"><i class="fa fa-modx" aria-hidden="true"></i> Byte-Icom Number</label></td> <!-- Select from Existing IP Phone list frm DB  // Select Account ID-->
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $byte_no; ?>
+				
+				
+				<tr><td colspan=2  class="w3-center" >
+				<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-blue w3-round" >
+				<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+	<!----------------------------- Byte Del Ends--------------------------------------------->	
+		<? } elseif ($action=="analog"){ ?>
+	<!----------------------------- Analogue Ph Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page;?> Analogue Phone Number </h3>
+				<input type="hidden" id="acc_type" value="analog"></td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i> Analogue Phone Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $acc_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="icom_name"><i class="fa fa-modx" aria-hidden="true"></i> Intercome Name</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $icom_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="disp_name"><i class="fa fa-modx" aria-hidden="true"></i> Display Name</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $disp_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="icom_no"><i class="fa fa-modx" aria-hidden="true"></i> Intercom Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $icom_no; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="rly_no"><i class="fa fa-modx" aria-hidden="true"></i> Railwy Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $rly_no; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pstn_no"><i class="fa fa-modx" aria-hidden="true"></i> PSTN Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown"></td></tr>
+				<? print $pstn_no; ?></td></tr>
+						
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- Analogue Ph Del Ends--------------------------------------------->			
+		<? } elseif ($action=="sip"){ ?>
+	<!----------------------------- SIP  Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page." ".$type;?> Gateway </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown"  width=60%>
+				<? print $gw_name; ?></td></tr>
+				
+				
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="icom_no"><i class="fa fa-modx" aria-hidden="true"></i> IP address</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $gw_ip; ?></td></tr>
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- SIP Delete Ends--------------------------------------------->			
+		<? } elseif ($action=="gw"){ ?>
+	<!----------------------------- GW  Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page." ".$type;?> Gateway </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown"  width=60%>
+				<? print $gw_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="icom_name"><i class="fa fa-modx" aria-hidden="true"></i> No.Of ports</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $port; ?></td></tr>
+				
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="icom_no"><i class="fa fa-modx" aria-hidden="true"></i> IP address</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $gw_ip; ?></td></tr>
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- GW Delete Ends--------------------------------------------->			
+		<? } elseif ($action=="conf"){ ?>
+	<!----------------------------- Conference  Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page;?> Conference </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="conf_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown"  width=60%>
+				<? print $conf_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="conf_no"><i class="fa fa-modx" aria-hidden="true"></i> Conf. Number</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $conf_no; ?></td></tr>
+				
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="conf_type"><i class="fa fa-modx" aria-hidden="true"></i> Conf. Type</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $conf_type; ?></td></tr>
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red w3-round" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- Conference Delete Ends--------------------------------------------->			
+		<? } elseif ($action=="route"){ ?>
+	<!----------------------------- Route  Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page; ?> Route </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown" width=60%>
+				<? print $route_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Pattern</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $pattern; ?></td></tr>
+				
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="gw_id1"><i class="fa fa-modx" aria-hidden="true"></i> GW-1</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $gw_id1; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="gw2"><i class="fa fa-modx" aria-hidden="true"></i> GW-2</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown">
+				<? print $gw_id2; ?></td></tr>
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- Route Del Ends--------------------------------------------->			
+		<? } elseif ($action=="icom"){ ?>
+	<!----------------------------- ICOM  Del --------------------------------------------->			
+				<tr><td colspan=2  class="w3-center" ><h3 style="text-transform:uppercase;" align=center> <? print $page; ?> Icom </h3>
+				</td></tr>
+		
+				
+				<tr><td class="w3-border-bottom w3-border-bottom-brown" width=40%><label for="acc_name"><i class="fa fa-modx" aria-hidden="true"></i>Name</label>
+				</td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown w3-center" width=60%>
+				<? print $icom_name; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Department</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown w3-center">
+				<? print $department; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> VLAN No.</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown w3-center">
+				<? print $vlan; ?></td></tr>
+				
+				<tr><td   class="w3-border-bottom w3-border-bottom-brown"><label for="pattern"><i class="fa fa-modx" aria-hidden="true"></i> Number of Accounts Available</label></td>
+				<td class="w3-text-blue w3-border-bottom w3-border-bottom-brown w3-center">
+				<b><? print $no_of_accounts; ?></b></td></tr>
+				
+				
+				<tr><td colspan=2  class="w3-center">
+					<input id="submit" onclick="accDel('<? print $action; ?>','delete');"  value="Delete" class=" w3-center w3-button w3-red" >
+					<input id="cancel" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="close" class="w3-center w3-button w3-blue">
+				</td></tr>
+		
+	<!----------------------------- ICOM Del Ends--------------------------------------------->			
+		<? }
+		
+		
+			} else{      //-------------------------- Choose Server
+			Print "<b class='w3-xlarge  w3-text-red'>Please choose a VOIP Server from Server list.</b> ";
+			}
+			} else{      //-------------------------- 
+			Print "<b class='w3-xlarge  w3-text-red'>Cannot be deleted</b> ";
+			}?>	
+				 
+
+    </div>
+    <div id="msg" class="w3-text-red w3-center" >
+    </div>
+	</table>
+  </div>
+
+</div>
+
+</body>
+</html>

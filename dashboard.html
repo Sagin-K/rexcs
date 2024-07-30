@@ -1,0 +1,461 @@
+<?
+include('./header.php');
+//include("./userAccess.php");
+$month="CURRENT_TIMESTAMP";
+$mnth=date('n', time());
+$year=date('Y', time());
+if((isset($_GET['year'])) && ($_GET['year']!="")){
+$mnth=$_GET['month'];
+$year=$_GET['year'];
+$month="'".$_GET['year']."-".$_GET['month']."-1'";
+//echo $month;
+}
+$from="CURDATE()";
+$to="(CURDATE()- interval 1 Month)";
+//--------------Registrars -----------//
+	$q="select * from $regTable where reg1_name!='' and rly='$rly' and divn='$divn' ";
+	$s=mysqli_query($conn,$q);
+	//	print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		$regcount=mysqli_num_rows($s);
+		}
+//--------------intercoms -----------//
+
+	$q="SELECT COUNT(DISTINCT icom_name) AS count ";
+	$q.="FROM icoms ";
+	$q.="INNER JOIN registrars ON icoms.server_id = registrars.id ";
+	$q.="WHERE registrars.rly= '$rly' and registrars.divn='$divn'";
+	//$q="SELECT COUNT(DISTINCT icom_name) as count FROM $icomTable where icom_name!=''  ";
+	//print $q;
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$icomcount=$d['count'];
+					}
+		
+//--------------ipphone -----------//
+	$q="SELECT COUNT(accounts.acc_name) AS count ";
+	$q.="FROM accounts ";
+	$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE registrars.rly= '$rly' and registrars.divn='$divn' and accounts.acc_type='ip' ";
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='ip' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$ipcount=$d['count'];
+					}
+//--------------ipphone -----------//
+	$q="SELECT COUNT(accounts.acc_name) AS count ";
+	$q.="FROM accounts ";
+	$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE rly= '$rly' and divn='$divn' and acc_type='analog' ";
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='analog' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$analogcount=$d['count'];
+					}
+		
+//////////////////Req//////////////////////////
+if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+//--------------Registrars -----------//
+	$q="select * from $regTable where reg1_name!='' and id='$registrar' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$regName=$d['reg1_name'];
+					}
+//--------------intercoms -----------//
+
+	$q="SELECT COUNT(DISTINCT icom_name) AS count ";
+	$q.="FROM icoms ";
+	//$q.="INNER JOIN registrars ON icoms.server_id = registrars.id ";
+	$q.="WHERE server_id= '$registrar'";
+	//$q="SELECT COUNT(DISTINCT icom_name) as count FROM $icomTable where icom_name!=''  ";
+	//print $q;
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$icomcount=$d['count'];
+					}
+		
+//--------------ipphone -----------//
+	$q="SELECT COUNT(DISTINCT acc_name) AS count ";
+	$q.="FROM accounts ";
+	//$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE server_id= '$registrar' and acc_type='ip' ";
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='ip' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$ipcount=$d['count'];
+					}
+//--------------ipphone -----------//
+	$q="SELECT COUNT(DISTINCT acc_name) AS count ";
+	$q.="FROM accounts ";
+	//$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+	$q.="WHERE server_id= '$registrar' and acc_type='analog'"; 
+	//$q="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='analog' ";
+	$s=mysqli_query($conn,$q);
+	while($d=mysqli_fetch_assoc($s)){
+		$analogcount=$d['count'];
+					}
+	}
+	
+	function pingTest($url){
+	
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_NOBODY, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+		curl_exec($ch);
+		$retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		if (200==$retcode) {
+			return true;
+		} else {
+			print false;
+		}
+	}
+	
+//////////////////Req//////////////////////////
+?>
+	<header class="w3-container" >
+    </header>
+
+	
+	<div class="w3-row-padding w3-margin-bottom" style="background:white" >
+    <div class="sticky w3-bar " >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"><? print $divn; ?> Division - <? print $rly ?></div>
+	</div>
+	<h5 class="w3-text-grey w3-opacity w3-padding" capitalise> Overview of Asterisk Exchanges in Division</h5>
+	
+	<div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16 w3-round w3-border w3-border-red w3-hover-text-red w3-hover-white" onclick="location.href='./index.html?page=reg&acc_type=reg'">
+		<h4>Registrars</h4>
+        <div class="w3-left"><i class="fa fa-database w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+		<? if(isset($_SESSION['registrar'])){ ?>
+          <h3><? print $regName; ?></h3>
+		<? } else { ?>
+			<h3><? print $regcount; ?></h3>
+		<? }?>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+    
+	<div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16 w3-round w3-border w3-border-blue w3-hover-text-blue w3-hover-white" onclick="location.href='./index.html?page=reg&acc_type=icom'">
+		<h4>Intercoms</h4>
+        <div class="w3-left"><i class="fa fa-object-group w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><? print $icomcount; ?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+    
+	<div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16 w3-round w3-border w3-border-teal w3-hover-text-teal w3-hover-white" onclick="location.href='./index.html?acc_type=ip&page=ipphone'">
+		<h4>IP Phone users</h4>
+        <div class="w3-left"><i class="fa fa-tty w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><? print $ipcount; ?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+    
+	<div class="w3-quarter">
+      <div class="w3-container w3-orange w3-text-white w3-padding-16 w3-round w3-border w3-border-orange w3-hover-text-orange w3-hover-white" onclick="location.href='./index.html?acc_type=analog&page=ipphone'">
+		<h4>Analogue Phone Users</h4>
+        <div class="w3-left"><i class="fa fa-phone w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><? print $analogcount; ?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+	
+	</div>
+<!--
+	<div class="w3-padding"><h5 class="w3-center" capitalise>Details of Registrars in <? print $divn; ?> Division</h5>
+	<?	$q="select * from $regTable where reg1_name!=''  and rly='$rly' and divn='$divn' ";
+	$s=mysqli_query($conn,$q);
+	//	print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){ 
+		
+		$server_id=$d['id'];
+		//$q1="select icom_name,acc_type, COUNT(DISTINCT acc_name ) as count from $accTable where server_id='$server_id' GROUP BY icom_name,acc_type ";
+		$q1="  SELECT icom_name,
+				 COUNT(*) as total,
+				 SUM(if(acc_type='ip',1,0)) AS ip,
+				 SUM(if(acc_type='analog',1,0)) AS analog
+				FROM $accTable
+				where server_id='$server_id'
+				GROUP BY icom_name";
+		$s1=mysqli_query($conn,$q1);
+	//	print mysqli_error($conn);
+		if(!(!$s1) || mysqli_num_rows($s1)>0){
+			?>
+		<div class="w3-quarter w3-padding ">
+			<h5 class="w3-center"><? print $d['reg1_name']; ?></h5>
+			<table class="w3-table w3-striped w3-white">
+			  <tr>
+				<td>Icom Names</td>
+				<td>IP phones</td>
+				<td>Analogue phones</td>
+				<td>Total</td>
+			  </tr>
+		 <?
+		while($d1=mysqli_fetch_assoc($s1)){ 
+			$q2="SELECT * FROM $icomTable where id={$d1['icom_name']} ";
+			$s2=mysqli_query($conn,$q2);
+			if(!(!$s1) || mysqli_num_rows($s2)>0){ 
+			while($d2=mysqli_fetch_assoc($s2)){
+		?>
+		 
+          <tr>
+            <td><? print $d2['icom_name']; ?></td>
+            <td><? print $d1['ip']; ?></td>
+            <td><? print $d1['analog']; ?></td>
+            <td><? print $d1['total']; ?></td>
+          </tr>
+		<? } } 
+		
+		} }?>
+        </table>
+      </div>
+	
+		<? }} ?>
+		</div-->
+
+		
+		<?			
+//------------------------------------------------------------------------ Registrar List -----------------------------------------//			
+
+$search1="where rly='$rly' and divn='$divn' ";
+$search="";
+$find="";
+$details="";
+
+if((isset($_GET['acc_type'])) && ($_GET['acc_type']!="")){
+	$acc_type=$_GET['acc_type'];
+	}
+if((isset($_GET['rly'])) && ($_GET['rly']!="")){
+	$rly1=$_GET['rly'];
+	$divn1=$_GET['divn'];
+	$search1="where rly='$rly1' and divn='$divn1' ";
+	}
+		$q="SELECT * FROM $regTable ";
+		$q.=$search1.$search;
+		$q.=" ORDER BY reg1_name DESC";
+		$sn=1; 
+	?>
+	<div  >
+		<div class="sticky w3-bar " >
+			<i class="w3-large w3-text-grey w3-padding" > Registrars in <? print " ". $divn." division /". $rly.""; ?></i> 
+			<div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','reg','nil');" ><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE REGISTRAR</i> </button></div>
+		</div>
+		
+			<table class="w3-table w3-small " style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="5%"></th>
+					<th width="30%" style="border-left:1px solid white">Registrar</th> 
+					<th width="10%" style="border-left:1px solid white">STD Codes</th>
+					<th width="10%" style="border-left:1px solid white">Length of Number</th>
+					<th width="20%" style="border-left:1px solid white">Accounts Created </th>
+					<th width="10%" style="border-left:1px solid white">Updated</th>
+					<th width="5%" style="border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top" class=" w3-small w3-hover-light-grey w3-border-white " style="text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%" class="w3-center ">
+						<? if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ print "<i class='fa fa-check w3-text-green w3-xxlarge w3-center' aria-hidden='true'></i>"; }
+						elseif($userid==$d['owner']){
+						$q2="select * from updates order by date DESC limit 1";
+						$s2=mysqli_query($conn,$q2);
+								if(!(!$s2) || mysqli_num_rows($s2)>0){
+								while($d2=mysqli_fetch_assoc($s2)){ 
+									$update_date=$d2['date'];
+								}}
+						if ($d['installed1_on']!="" && ($d['installed1_on']< $update_date)){ ?>
+						<button class="blinnk" onclick="addPages('1','reg','install','<? print $d['id'] ?>');"><i class="fa fa-cog w3-medium " aria-hidden="true"></i> Update & Configure</button>
+						<? } else { //print $update_date."-".$d['installed1_on']; 
+						?>
+						
+						<button class="w3-button w3-border w3-round w3-border-blue w3-text-blue  w3-hover-blue" onclick="selectReg('registrar','<? print $d['id'] ?>')"><i class="fa fa-cog w3-medium " aria-hidden="true"></i> Configure</button>
+						<? } }
+						else {
+						$q1="SELECT * FROM $userTable where id= {$d['owner']}";
+						$s1=mysqli_query($conn,$q1);
+								//print mysqli_error($conn);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print "Ownership:<br> ".$d1['name']."";
+								}}
+						} ?>
+					</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<div>
+						<div > <b class='w3-medium w3-text-blue'><? print $d['reg1_name']; ?></b> 
+						<button id="<? print $d['id']; ?>_status" class="w3-right w3-white w3-text-grey w3-round w3-border w3-border-grey" onclick="IPstatus('<? print $d['id']; ?>')"> Check Status </button>
+						<br>
+						(<i class="w3-opacity w3-tiny" > Location </i>: <b class='w3-small w3-text-black'><? print $d['location']; ?></b>) </div>
+					<!--------------------------IP of server --------------------->
+						<div>
+							<? if(pingtest($d['reg1_ip'])){ ?>
+								<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_1"><i class='fa fa-circle  w3-text-green' aria-hidden='true'></i></b> Primary Server</i></div>
+							
+							<? } else { ?>
+								<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_1"><i class='fa fa-circle  w3-text-red' aria-hidden='true'></i></b> Primary Server</i></div>
+							
+							<? } ?>
+							<div class="w3-half">:  <b class='w3-medium w3-text-blue'><? print $d['reg1_ip']; ?></b></div>
+						</div>
+						<? if ($d['installed1_on']!=""){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >Installed ON</i></div>
+								<div class="w3-half">  : <b class='w3-tiny'><? echo date('H:i:s d-m-Y', strtotime($d['installed1_on'])) ?></b></div>
+							</div>
+						<? } if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >.</i></div>
+								<div class="w3-half"> <a class="w3-text-blue w3-hover-text-red w3-small" onclick="addPages('2','reg','install','nil');">
+									<i class="fa fa-cloud-download w3-small" aria-hidden="true" disabled></i> <? if ($d['installed1_on']!=""){ print "Re-";} ?>Install RExCS</a>
+								</div>
+							</div>
+						<? } ?>
+						<? if ($d['reg2_ip']!=""){ ?>
+						<div>
+							<? if(pingtest($d['reg2_ip'])){ ?>
+								<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_1"><i class='fa fa-circle  w3-text-green' aria-hidden='true'></i></b> Secondary Server</i></div>
+							
+							<? } else { ?>
+								<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_1"><i class='fa fa-circle  w3-text-red' aria-hidden='true'></i></b> Secondary Server</i></div>
+							
+							<? } ?>
+							<div class="w3-half">:  <b class='w3-medium w3-text-blue'><? print $d['reg2_ip']; ?></b></div>
+						</div>
+						<? if ($d['installed2_on']!=""){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >Installed ON</i></div>
+								<div class="w3-half">  : <b class='w3-tiny'><? echo date('H:i:s d-m-Y', strtotime($d['installed2_on'])) ?></b></div>
+							</div>
+						<? } if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' > .</i></div>
+								<div class="w3-half"> <a class="w3-text-blue w3-hover-text-red w3-small" onclick="addPages('3','reg','install','nil');">
+									<i class="fa fa-cloud-download w3-small" aria-hidden="true" disabled></i> <? if ($d['installed2_on']!=""){ print "Re-";} ?> Install RExCS</a>
+								</div>
+							</div>
+						<? } }?>
+						</div>
+					</td>
+					
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >Railway </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['rly_code']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >PSTN </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['pstn_code']; ?></b></div>
+						</div>
+					</td>
+					
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >Railway </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['rly_no_length']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >I.Com </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['icom_no_length']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" > PSTN </i> </div><div class="w3-half">: <b class='w3-medium w3-text-blue'><? print $d['pstn_no_length']; ?></b></div>
+						</div>
+					</td>
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<? 	$q1="SELECT COUNT(DISTINCT icom_name) as count FROM $icomTable where server_id = ".$d['id']."  ";
+							$s1=mysqli_query($conn,$q1);
+							while($d1=mysqli_fetch_assoc($s1)){
+								$icomcount=$d1['count'];
+								
+						?>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" > ICOMS </i> </div><div class="w3-half">: <b class='w3-medium w3-text-blue'><? print $icomcount; ?></b></div>
+						<? }
+						?>
+						<? 	$q1="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where server_id = ".$d['id']."  ";
+							$s1=mysqli_query($conn,$q1);
+							while($d1=mysqli_fetch_assoc($s1)){
+								$accountcount=$d1['count'];
+								
+						?>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" > Accounts </i> </div><div class="w3-half">: <b class='w3-medium w3-text-blue'><? print $accountcount; ?></b></div>
+						<? }
+						?>
+						</div>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;text-align:center;border-left:1px solid #F8F9F9" class='w3-tiny'>
+						<? 
+						$q1="SELECT * FROM $userTable where id= {$d['updated_by']}";
+						$s1=mysqli_query($conn,$q1);
+								//print mysqli_error($conn);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print $d1['name']."<br>";
+								}}
+						
+						print  date('H:i:s d-m-Y', strtotime($d['updated_on']));?>
+					</td>
+					<td width="5%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['owner']){ ?>
+						<!--i class="fa fa-ellipsis-h w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" ></i-->
+						<div class="w3-dropdown-click">
+							<i class="fa fa-ellipsis-h w3-large w3-text-blue" aria-hidden="true" onclick="RegMenu('<? print $sn;?>')"></i>
+							<div id="regEdit_<? print $sn; $sn++?>" class="w3-dropdown-content w3-bar-block w3-card-4 w3-animate-zoom" style="right:0">
+							  <a href="#" onclick="addPages('1','reg','reg','<? print $d['id'];?>');" class="w3-bar-item w3-button">EDIT</a>
+							  <a href="#" onclick="addPages('1','reg','own','<? print $d['id'];?>');" class="w3-bar-item w3-button">Change Ownership</a>
+							</div>
+						</div>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}else{
+			Print "<b class='w3-xlarge w3-text-red'>Please Add A Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-text-white'><i class='fa fa-plus-circle w3-text-blue  w3-large' aria-hidden='true'></i></a></b> ";
+			}
+			 ?>
+			</table>
+		  </div>
+		  
+		  
+<!------------------------------ Download Rexcl Text file----------------------->
+		<div class="sticky w3-bar " >
+			<i class="w3-large w3-text-grey w3-padding" > Download RExCL Text File</i> 
+		</div>
+		
+		<div class="w3-raw w3-margin-bottom w3-left" style="background:white;width:100%" >
+		<? 
+		$q="select * from $regTable where reg1_name!='' and rly='$rly' and divn='$divn' and committed_on IS NOT NULL ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+		print "<a href='/configfiles/".$d['reg1_name']."_".$d['divn']."_".$d['rly']."_rexcl.rexcl' class='w3-button w3-small w3-col 4 l1 w3-border w3-round' download> <i class='fa fa-download w3-text-green' aria-hidden='true'></i> ".$d['reg1_name']."</a>";
+			}
+		}
+		?>
+		</div>
+		<div class="w3-bar ">
+		  <b class="w3-bar-item w3-small w3-text-red" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"> ** Remember to regularly back up your settings to avoid any potential data loss or disruption. ** </b>
+		</div>
+		
+		
+<script>
+
+</script>

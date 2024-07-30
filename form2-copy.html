@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./w3.css">
+	<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+	<script src="./../../jquery/jquery-1.10.2.js"></script>
+	<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+	<link rel="stylesheet" href="./../../jquery/style.css">
+	<script src="./datepicker.js"></script>
+	<script src="./index1.js"></script>
+	<style>
+      html, body {
+      min-height: 100%;
+      }
+      body, div, form, input, select, textarea, label { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 12px;
+      color: #666;
+      line-height: 15px;
+      }
+      h1 {
+      position: absolute;
+      margin:0;
+      font-size: 60px;
+      color: #fff;
+      z-index: 2;
+      line-height: 83px;
+      top:30px;
+      }
+      legend {
+      padding: 10px;      
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 18px;
+	  capitalize;
+      color: #18303c;
+      }
+      textarea {
+      width: calc(80% - 12px);
+      padding: 5px;
+      }
+      .testbox {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      padding: 20px;
+      }
+      form {
+      width: 100%;
+      padding: 20px;
+      border-radius: 6px;
+      //border: brown;
+      background: #fff;
+      //box-shadow: 0 0 8px #006622; 
+      }
+      .banner {
+      position: relative;
+      height: 250px;
+      background-image: url("/uploads/media/default/0001/02/cc6bc584f236c7234947015b89151ab6d04c4cbf.jpeg");  
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .banner::after {
+      content: "";
+      background-color: rgba(0, 0, 0, 0.4); 
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      }
+      input, select, textarea {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      }
+      input {
+      width: 30%;
+      padding: 10px;
+      }
+      input[type="date"] {
+      padding: 4px 5px;
+      }
+      textarea {
+      width: calc(80% - 20px);
+      padding: 5px;
+      }
+      .item:hover p, .item:hover i, .question:hover p, .question label:hover, input:hover::placeholder {
+      color:  #006622;
+      }
+      .checkbox input[type=checkbox] {
+      display:inline-block;
+      height:15px;
+      width:15px;
+      margin-right:5px;
+      vertical-align:text-top;
+      }
+      .item input:hover, .item select:hover, .item textarea:hover {
+      border: 1px solid transparent;
+      box-shadow: 0 0 3px 0  #006622;
+      color: #006622;
+      }
+      .item {
+      position: relative;
+      margin: 10px 0;
+      }
+      .item span {
+      color: red;
+      }
+      .week {
+      display:flex;
+      justfiy-content:space-between;
+      }
+      .colums {
+      display:flex;
+      justify-content:space-between;
+      flex-direction:row;
+      flex-wrap:wrap;
+      }
+      .colums div {
+      width:30%;
+      }
+      .columns2 {
+      display:flex;
+      justify-content:space-between;
+      flex-direction:column;
+      flex-wrap:wrap;
+      }
+      .colums2 div {
+      width:50%;
+      }
+      input[type=radio], input[type=checkbox]  {
+      display: none;
+      }
+      label.radio {
+      position: relative;
+      display: inline-block;
+      margin: 5px 20px 15px 0;
+      cursor: pointer;
+      }
+      .question span {
+      margin-left: 30px;
+      }
+      .question-answer label {
+      display: block;
+      }
+      label.radio:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      }
+      input[type=radio]:checked + label:before, label.radio:hover:before {
+      border: 2px solid  #006622;
+      }
+      label.radio:after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 5px;
+      width: 8px;
+      height: 4px;
+      border: 3px solid  #006622;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      opacity: 0;
+      }
+      input[type=radio]:checked + label:after {
+      opacity: 1;
+      }
+      .flax {
+      display:flex;
+      justify-content:space-around;
+      }
+      .btn-block {
+      margin-top: 10px;
+      text-align: center;
+      }
+      button {
+      width: 150px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px; 
+      background:  #1c87c9;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      }
+      button:hover {
+      background:  #0692e8;
+      }
+      @media (min-width: 568px) {
+      .name-item, .city-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      }
+      .name-item input, .name-item div {
+      width: calc(30% - 50px);
+      }
+      .name-item div input {
+      width:80%;}
+      .name-item div label {
+      display:block;
+      padding-bottom:25px;
+      }
+      }
+    </style>
+	
+<?
+	//include("./userAccess.php");
+	include("./header.php");
+	//session_start();
+	//regTable();
+	//icomTable();
+	//gatewayTable();
+	//accountTable();
+	//routeTable();
+	//phoneTable();
+
+	//---------------------check whether Server is selected or not
+	if(isset($_SESSION['registrar'])){
+	$registrar=$_SESSION['registrar'];	
+	$action="ip";
+	if(isset($_GET['action']) && $_GET['action']!=""){
+	$action=$_GET['action'];
+	}
+//---------------------NEW-----------------------------------------
+	$id="";
+	$accID="";
+	$cat="";
+	$page="add";
+	$server_id=$_SESSION['registrar'];
+	$acc_type="";
+	$acc_name="";
+	$icom_name="";
+	$disp_name="";	
+	$icom_no="";
+	$secret1="";
+	$rly_no="";
+	$pstn_no="";
+	$callgroup="";
+	$pickupgroup="";
+	$server2="";
+	$user_id2="";
+	$password2="";
+	$mac="";
+	$phone="";
+	$ps_no="";
+	$ps_type="";
+	$acc_vlan="";
+	$gw_id="";
+	$gw_port="";
+	$gw_port_name="";
+	$map_no="";
+	$byte_no="";
+	$parallel_num1="";
+	$parallel_num2="";
+	$parallel_num3="";
+	$parallel_num4="";
+	$vm_pw="";
+	$recording="";
+	$remark="";
+	$updated_by="";
+	$mnth=date('n', time());
+	$year=date('Y', time());
+//------------------ON EDIT--------------------------------------------
+if(isset($_GET['id']) && $_GET['id']!=""){
+	$page="edit";
+	$id=$_GET['id'];
+	$accID=$_GET['id'];
+	$q="SELECT * FROM $accTable where id = $id and server_id= $registrar";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){ 
+	$server_id=$d['server_id'];
+	$acc_type=$d['acc_type'];
+	$acc_name=$d['acc_name'];
+	$icom_name=$d['icom_name'];
+	$disp_name=$d['disp_name'];	
+	$icom_no=$d['icom_no'];
+	$secret1=$d['secret1'];
+	$rly_no=$d['rly_no'];
+	$pstn_no=$d['pstn_no'];
+	$callgroup=$d['callgroup'];
+	$pickupgroup=$d['pickupgroup'];
+	$server2=$d['server2'];
+	$user_id2=$d['user_id2'];
+	$password2=$d['password2'];
+	$mac=$d['mac'];
+	$phone=$d['phone'];
+	$ps_no=$d['ps_no'];
+	$ps_type=$d['ps_type'];
+	$acc_vlan=$d['acc_vlan'];
+	$gw_id=$d['gw_id'];
+	$gw_port=$d['gw_port'];
+	$gw_port_name=$d['gw_port_name'];
+	$map_no=$d['map_no'];
+	$byte_no=$d['byte_no'];
+	$parallel_num1=$d['parallel_num1'];
+	$parallel_num2=$d['parallel_num2'];
+	$parallel_num3=$d['parallel_num3'];
+	$parallel_num4=$d['parallel_num4'];
+	$vm_pw=$d['vm_pw'];
+	$recording=$d['recording'];
+	$remark=$d['remark'];
+	}}
+}
+
+?>
+  </head>
+  <body>
+		<input type="hidden" id="id" value="<? print $id;?>">
+		<input type="hidden" id="rly" value="<? print $rly;?>">
+		<input type="hidden" id="divn" value="<? print $divn;?>">
+		<input type="hidden" id="server_id" value="<? print $server_id;?>">
+		<input type="hidden" id="page" value="<? print $page;?>">
+		<input type="hidden" id="action" value="<? print $action;?>">
+		<input type="hidden" id="updated_by" value="<? print $userid;?>">
+		<input type="hidden" id="phone" value="<? print $phone;?>">
+		<input type="hidden" id="mac" value="<? print $mac;?>">
+		<? 	$q="select * from $regTable where id=$server_id ";
+									$s=mysqli_query($conn,$q);
+									//	print mysqli_error($conn);
+									if(!(!$s) || mysqli_num_rows($s)>0){
+									while($d=mysqli_fetch_assoc($s)){ 
+									$reg1_name=$d['reg1_name'];
+									$reg1_ip=$d['reg1_ip'];
+									$location=$d['location'];
+									$rly_no_length=$d['rly_no_length'];
+									$icom_no_length=$d['icom_no_length'];
+									$pstn_no_length=$d['pstn_no_length'];
+								}
+								}
+								
+		if ($action=="ip"){ 
+	//-------------------------------------------ADD IP phone numbers -----------------------------------//
+	?>
+		
+    <div class="testbox">
+    <form>
+			<input type="hidden" id="acc_type" value="ip">
+			<!--input type="hidden" id="pstn_no" value="">
+			<input type="hidden" id="pstn_no_msg" value=""-->
+			<input type="hidden" id="phone_msg" value="">
+			<input type="hidden" id="mac_msg" value="">
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  IP Phone  [ in Server:<b class="w3-text-brown"> <? print $reg1_name; ?> ]
+		  </div>
+		</div>
+		
+        <!--legend> < ? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> < ? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="icom_name">Intercom <span>*</span></label>
+					<select id="icom_name" name="icom_name" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDatabase(this.id,this.value);">
+									<? 	$q="select * from $icomTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$icom_name){
+										print "<option value=\"{$d['id']}\" selected>{$d['icom_name']}</option>";
+										}else{
+											print "<option value=\"{$d['id']}\" >{$d['icom_name']}</option>";
+											}
+									}
+									}
+								?>
+					</select>
+					<div id="icom_name_msg"></div>
+					
+		  </div>
+          <div class="item">
+           
+          </div>
+          <div class="item">
+            
+          </div>
+		  
+          <div class="item">
+            <label for="acc_name"> Designation <span>*</span></label>
+            <input type="text" id="acc_name" name="acc_name" value="<? print $acc_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Designation">
+			<div id="acc_name_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="disp_name">Display Name (Designation) <span>*</span></label>
+            <input type="text" id="disp_name" name="disp_name" value="<? print $disp_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name To be Displayed">
+					<div id="disp_name_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            
+          </div>
+		  
+          <div class="item">
+            <label for="rly_no"> Railway Phone Number <span>*</span></label>
+            <input type="text" id="rly_no" name="rly_no" value="<? print $rly_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $rly_no_length; ?> digit Number">
+					<div id="rly_no_msg" style="width:100%"></div>
+					<div style="width:100%"> <i class="w3-text-grey w3-tiny">[ This will be used as Username in IP phone/ FXS to add account]</i></div>
+          </div>
+          <div class="item">
+            <label for="icom_no">Intercom Number <span>*</span></label>
+            <input type="text" id="icom_no" name="icom_no" value="<? print $icom_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $icom_no_length; ?> digit Number">
+					<div id="icom_no_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="pstn_no">PSTN Number </label>
+            <input type="text" id="pstn_no" name="pstn_no" value="<? print $pstn_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $pstn_no_length; ?> digit Number">
+					<div id="pstn_no_msg" style="width:100%"></div>
+          </div>
+          
+		  
+          <div class="item">
+            <label for="secret1">Password <span>*</span></label>
+            <input type="text" id="secret1" name="secret1" value="<? print $secret1; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Account password for this IP No.">
+					<div id="secret1_msg" style="width:100%"></div>
+					<div style="width:100%"> <i class="w3-text-grey w3-tiny">[ This will be used as PW in IP phone/ FXS to add account]</i></div>
+          </div>
+          <div class="item">
+            
+          </div>
+		  <div class="item">
+           
+          </div>
+		<? if($page!="add"){ ?>
+		
+          <!--div class="item">
+            <label for="phone">IP Phone Model</label>
+			<select id="phone" name="phone" style="height:35px;padding:10px" >
+									< ? 	$catList=array(	'',
+														'Yealink-T23G',
+														'Yealink-T27G',
+														'Mitel-6865i');
+									foreach($catList as $val) {
+										if($val==$phone){
+										print "<option value=\"{$val}\" selected>{$val}</option>";
+										}else{
+											print "<option value=\"{$val}\" >{$val}</option>";
+											}
+									}
+								?>
+					</select>
+					<div id="phone_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            <label for="mac">MAC Adress</label>
+            <input type="text" id="mac" name="mac" value="< ? print $mac; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="xx-xx-xx-xx-xx-xx">
+					<div id="mac_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            
+          </div-->
+		<div class="item">
+            <label for="callgroup"> Call Group no.</label>
+			<!--input type="text" id="callgroup" name="callgroup" value="< ? print $callgroup; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Call group Number"-->
+			<select id="callgroup" name="callgroup" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDatabase(this.id,this.value);">
+					<? 	$catList=array(	'','1','2','3','4','5','6','7');
+						foreach($catList as $val) {
+							if($val==$callgroup){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+			</select>
+			<div id="callgroup_msg" style="width:100%"></div>
+          </div>
+		  <!-- div class="item">
+            <label for="callgroup2"> Call Group no.2</label>
+			<!--input type="text" id="callgroup" name="callgroup" value="< ? print $callgroup; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Call group Number">
+			<select id="callgroup2" name="callgroup2" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDatabase(this.id,this.value);">
+					< ? 	$catList=array(	'','1','2','3','4','5','6','7');
+						foreach($catList as $val) {
+							if($val==$callgroup2){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+			</select>
+			<div id="callgroup2_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            <label for="callgroup3"> Call Group no.3</label>
+			<!--input type="text" id="callgroup" name="callgroup" value="< ? print $callgroup; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Call group Number">
+			<select id="callgroup3" name="callgroup3" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDatabase(this.id,this.value);">
+					< ? 	$catList=array(	'','1','2','3','4','5','6','7');
+						foreach($catList as $val) {
+							if($val==$callgroup3){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+			</select>
+			<div id="callgroup3_msg" style="width:100%"></div>
+          </div-->
+		  <div class="item">
+            <label for="pickupgroup">Pickup Group No</label>
+            <select id="pickupgroup" name="pickupgroup" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDatabase(this.id,this.value);">
+					<? 	$catList=array(	'','1','2','3','4','5','6','7');
+						foreach($catList as $val) {
+							if($val==$pickupgroup){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+			</select>
+			<div id="pickupgroup_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            <!--label for="recording"> Voice recording <span>*</span></label>
+            <select id="recording" name="recording" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDb(this.id,this.value);">
+					< ? 	$catList=array(	'No','Yes');
+						foreach($catList as $val) {
+							if($val==$recording){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+					</select-->
+          </div>
+		<? } ?>  
+		</div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>
+		 
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=ip&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	
+	</div>
+   
+ <? } 
+ //----------------------- IP phone Add Ends ------------------------------
+ 
+ //----------------------- Analogue phone Add  ------------------------------
+ 		elseif ($action=="analog"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+			<input type="hidden" id="acc_type" value="analog">
+			<!--input type="hidden" id="pstn_no" value="">
+			<input type="hidden" id="pstn_no_msg" value=""-->
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Analogue Phone  [ in Server:<b class="w3-text-brown"> <? print $reg1_name; ?> ]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="icom_name">Intercom <span>*</span></label>
+					<select id="icom_name" name="icom_name" style="height:35px;padding:10px" >
+									<? 	$q="select * from $icomTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$icom_name){
+										print "<option value=\"{$d['id']}\" selected>{$d['icom_name']}</option>";
+										}else{
+											print "<option value=\"{$d['id']}\" >{$d['icom_name']}</option>";
+											}
+									}
+									}
+								?>
+					</select>
+					<div id="icom_name_msg"></div>
+					
+		  </div>
+          <div class="item">
+           
+          </div>
+          <div class="item">
+            
+          </div>
+		  
+          <div class="item">
+            <label for="acc_name"> Designation <span>*</span></label>
+            <input type="text" id="acc_name" name="acc_name" value="<? print $acc_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Designation">
+			<div id="acc_name_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="disp_name">Display Name (Designation) <span>*</span></label>
+            <input type="text" id="disp_name" name="disp_name" value="<? print $disp_name; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Name To be Displayed">
+					<div id="disp_name_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            
+          </div>
+		  
+          <div class="item">
+            <label for="rly_no"> Railway Phone Number <span>*</span></label>
+            <input type="text" id="rly_no" name="rly_no" value="<? print $rly_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $rly_no_length; ?> digit Number">
+					<div id="rly_no_msg" style="width:100%"></div>
+					<div style="width:100%"> <i class="w3-text-grey w3-tiny">[ This will be used as Username in IP phone/ FXS to add account]</i></div>
+          </div>
+          <div class="item">
+            <label for="icom_no">Intercom Number <span></span></label>
+            <input type="text" id="icom_no" name="icom_no" value="<? print $icom_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $icom_no_length; ?> digit Number">
+					<div id="icom_no_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="pstn_no">PSTN Number</label>
+            <input type="text" id="pstn_no" name="pstn_no" value="<? print $pstn_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="<? print $pstn_no_length; ?> digit Number">
+					<div id="pstn_no_msg" style="width:100%"></div>
+          </div>
+		  
+          <div class="item">
+            <label for="secret1">Password <span>*</span></label>
+            <input type="text" id="secret1" name="secret1" value="<? print $secret1; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Account password for this IP No.">
+					<div id="secret1_msg" style="width:100%"></div>
+					<div style="width:100%"> <i class="w3-text-grey w3-tiny">[ This will be used as PW in IP phone/ FXS to add account]</i></div>
+          </div>
+          <div class="item">
+            
+          </div>
+		  <div class="item">
+           
+          </div>
+		<? if($page!="add"){ ?>
+			<div class="item">
+				<label for="callgroup"> Call Group no.</label>
+				<input type="text" id="callgroup" name="callgroup" value="<? print $callgroup; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Call group Number">
+						<div id="callgroup_msg" style="width:100%"></div>
+			</div>
+			<div class="item">
+				<label for="pickupgroup">Pickup Group No</label>
+				<input type="text" id="pickupgroup" name="pickupgroup" value="<? print $pickupgroup; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Pickup group Number">
+						<div id="pickupgroup_msg" style="width:100%"></div>
+			</div>
+			<div class="item">
+				 <!--label for="recording"> Voice recording <span>*</span></label>
+				<select id="recording" name="recording" style="height:35px;padding:10px"  style="w3-padding" onchange="scanDb(this.id,this.value);">
+					< ? 	$catList=array(	'No','Yes');
+						foreach($catList as $val) {
+							if($val==$recording){
+							print "<option value=\"{$val}\" selected>{$val}</option>";
+							} else{
+							print "<option value=\"{$val}\" >{$val}</option>";
+							}
+						}
+					?>
+					</select-->
+			</div>
+		<? } ?>  
+		  
+          
+		</div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>
+		 
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=analog&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ //----------------------- IP phone Add Ends ------------------------------
+ 
+ //----------------------- Secondary Account ------------------------------
+ 	elseif ($action=="ip2"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Secondary Account  [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="accID"> Main Account <span>*</span></label>
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="SELECT * FROM $accTable where server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$accID){ ?>
+										<option value="<? print $d['id']; ?>" selected><? print $d['acc_name']." , [ Rly No 1:".$d['rly_no']."]" ; ?></option>
+										<? } else{ ?>
+										<option value="<? print $d['id']; ?>" ><? print $d['acc_name']." , [ Rly No:".$d['rly_no']."]" ; ?></option>
+										<?	}
+										}
+										}
+									?>
+					</select>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+           
+          </div>
+          <div class="item">
+            
+          </div>
+		  
+          <div class="item">
+            <label for="server2"> Secondary SIP Server Address<span>*</span></label>
+            <input type="text" id="server2" name="server2" value="<? print $server2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="IP address xx.xx.xx.xx">
+			<div id="server2_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="user_id2"> User ID <span>*</span></label>
+            <input type="text" id="user_id2" name="user_id2" value="<? print $user_id2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="User ID in Second SIP Serv">
+				<div id="user_id2_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="password2"> Password <span>*</span></label>
+            <input type="text" id="password2" name="password2" value="<? print $password2; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Password for Second SIP Serv">
+				<div id="password2_msg" style="width:100%"></div>
+          </div>
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=ip2&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ Secondary Account Ends  -----------------------------
+ 
+  //----------------------- Boss-Secy ------------------------------
+ 	elseif ($action=="bs"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Boss- Secretary Numbers [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="accID"> Boss Phone Account <span>*</span></label>
+					<? if($accID!=""){ ?>
+					<input type="hidden" id="accID" value="<? print $accID; ?>">
+					<input type="text" id="accname" name="accname" value="<? print $acc_name; ?>" disabled>
+					<? } else { ?>
+					
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+													print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+										}
+									?>
+					</select>
+					<? } ?>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+				<label for="accID">  B-S Type <span>*</span></label>
+					<select id="ps_type" name="ps_type" style="height:35px;padding:10px" >
+								<? 	$catList=array(	'default',
+													'only_secy');
+								foreach($catList as $val) {
+									if($val==$ps_type){
+										print "<option value=\"{$val}\" selected>{$val}</option>";
+									}else{
+										print "<option value=\"{$val}\" >{$val}</option>";
+										}
+								}
+							?>
+					</select>
+					<div id="ps_type_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+				<label for="ps_no"> PS Phone Account <span>*</span></label>
+					<select id="ps_no" name="ps_no" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+													if($d['id']==$ps_no){
+														print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+													}else{
+														print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+														}
+												}
+											}
+									?>
+					</select>
+					<div id="ps_no_msg" style="width:100%"></div>
+					
+		  </div>
+           
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=bs&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ B-S Ends  -----------------------------
+ 
+  //----------------------- Short Code ------------------------------
+ 	elseif ($action=="map"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Short Code [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="map_no"> Short Code <span>*</span></label>
+					<input type="text" id="map_no" name="map_no" value="<? print $map_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Short code for Number">
+				<div id="map_no_msg" ></div>
+		  </div>
+          <div class="item">
+				<label for="accID"> Phone Account <span>*</span></label>
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$accID){
+										print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+										}else{
+											print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+											}
+										}
+										}
+									?>
+					</select>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+					
+		  </div>
+          
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=map&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	
+	</div>
+   
+ <? } 
+ 
+ //------------------------ Short COde ends -----------------------------
+ 
+  //----------------------- Byte ------------------------------
+ 	elseif ($action=="byte"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Byte-Intercom No [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="byte_no"> Byte Number <span>*</span></label>
+				<input type="text" id="byte_no" name="byte_no" value="<? print $byte_no; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="Short code for Number">
+				<div id="byte_no_msg" ></div>
+		  </div>
+          <div class="item">
+				<label for="accID"> Phone Account <span>*</span></label>
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+										if($d['id']==$accID){
+										print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+										}else{
+											print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+											}
+										}
+										}
+									?>
+					</select>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+					
+		  </div>
+          
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=byte&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ byte Ends  -----------------------------
+   //----------------------- Parallel Connection Add ------------------------------
+ 	elseif ($action=="parallel"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Parallel Connections [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="accID"> Main Account <span>*</span></label>
+					<? if($accID!=""){ ?>
+					<input type="hidden" id="accID" value="<? print $accID; ?>">
+					<input type="text" id="accname" name="accname" value="<? print $acc_name; ?>" disabled>
+					<? } else { ?>
+					
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+													print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+										}
+									?>
+					</select>
+					<? } ?>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+          <div class="item">
+				<label for="parallel_num1"> Parallel Number 1 <span>*</span></label>
+					<select id="parallel_num1" name="parallel_num1" style="height:35px;padding:10px" onchange="scanDatabase(this.id,1)">
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+													if($d['id']==$parallel_num1){
+														print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+													}else{
+														print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+														}
+												}
+											}
+									?>
+					</select>
+					<div id="parallel_num1_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+		  </div>
+          <div class="item">
+					
+		  </div>
+          <div class="item">
+				<label for="parallel_num2"> Parallel Number 2<span></span></label>
+					<select id="parallel_num2" name="parallel_num2" style="height:35px;padding:10px" onchange="scanDatabase(this.id,2)" disabled>
+					<option value="" ></option>
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+													if($d['id']==$parallel_num2){
+														print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+													}else{
+														print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+														}
+												}
+											}
+									?>
+					</select>
+					<div id="parallel_num2_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+		  <? if($page=="edit"){ ?>
+		  <i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="enable" title="enable" onclick="toggle('parallel_num2');"></i>
+			<? } ?>
+			</div>
+		  
+          <div class="item">
+					
+		  </div>
+          <div class="item">
+				<label for="parallel_num3"> Parallel Number 3<span></span></label>
+					<select id="parallel_num3" name="parallel_num3" style="height:35px;padding:10px" onchange="scanDatabase(this.id,3)" disabled>
+					<option value="" ></option>
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+													if($d['id']==$parallel_num3){
+														print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+													}else{
+														print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+														}
+												}
+											}
+									?>
+					</select>
+					<div id="parallel_num3_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+		  <? if($page=="edit"){ ?>
+		  <i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="toggle('parallel_num3');"></i>
+			<? } ?></div>
+		  
+          <div class="item">
+					
+		  </div>
+          <div class="item">
+				<label for="parallel_num4"> Parallel Number 4<span></span></label>
+					<select id="parallel_num4" name="parallel_num4" style="height:35px;padding:10px" onchange="scanDatabase(this.id,4)" disabled>
+								<option value="" ></option>
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+												while($d=mysqli_fetch_assoc($s)){ 
+													if($d['id']==$parallel_num4){
+														print "<option value=\"{$d['id']}\" selected>{$d['acc_name']} , [ Rly No: {$d['rly_no']}]</option>";
+													}else{
+														print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+														}
+												}
+											}
+									?>
+					</select>
+					<div id="parallel_num4_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+		  <? if($page=="edit"){ ?>
+		  <i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="toggle('parallel_num4');"></i>
+			<? } ?>
+		</div>
+           
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=parallel&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ Parallel Conn. Ends  -----------------------------
+   //----------------------- Voicemail Connection Add ------------------------------
+ 	elseif ($action=="vm"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Voicemail Enabled Numbers [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="accID"> Account <span>*</span></label>
+					<? if($accID!=""){ ?>
+					<input type="hidden" id="accID" value="<? print $accID; ?>">
+					<input type="text" id="accname" name="accname" value="<? print $acc_name; ?>" disabled>
+					<? } else { ?>
+					
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+													print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+										}
+									?>
+					</select>
+					<? } ?>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+				<label for="vm_pw"> Voicemail PIN <span>*</span></label>
+				<input type="text" id="vm_pw" name="vm_pw" value="<? print $vm_pw; ?>" onkeyup="scanDatabase(this.id,this.value);" placeholder="PIN: 4 digits">
+				<div id="vm_pw_msg" ></div>
+		  </div>
+		  <div class="item">
+		  </div>
+           
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=vm&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ Voicemail Ends  -----------------------------
+   //----------------------- Record Add ------------------------------
+ 	elseif ($action=="rec"){ 
+	
+	?>
+		
+    <div class="testbox">
+    <form>
+		
+     <div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  Call Recording Enabled Numbers [in :<b class="w3-text-brown"> <? print $reg1_name; ?>]
+		  </div>
+		</div>
+		
+        <!--legend> <? print $page;?>  IP Phone in Server:<b class="w3-text-blue"> <? print $reg1_name; ?></legend-->
+        <div class="colums"> 
+		  <div class="item">
+				<label for="accID"> Account <span>*</span></label>
+					<? if($accID!=""){ ?>
+					<input type="hidden" id="accID" value="<? print $accID; ?>">
+					<input type="text" id="accname" name="accname" value="<? print $acc_name; ?>" disabled>
+					<? } else { ?>
+					
+					<select id="accID" name="accID" style="height:35px;padding:10px" >
+									<? 	$q="select * from $accTable WHERE server_id= $server_id ";
+										$s=mysqli_query($conn,$q);
+										//	print mysqli_error($conn);
+											if(!(!$s) || mysqli_num_rows($s)>0){
+											while($d=mysqli_fetch_assoc($s)){ 
+													print "<option value=\"{$d['id']}\" >{$d['acc_name']} , [Rly No: {$d['rly_no']}]</option>";
+										}
+										}
+									?>
+					</select>
+					<? } ?>
+					<div id="accID_msg" style="width:100%"></div>
+					
+		  </div>
+		  <div class="item">
+
+		  </div>
+		  <div class="item">
+		  </div>
+           
+         
+        </div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>  
+          
+      
+      <div class="btn-block w3-right">
+		<? if ($id!=""){ ?>
+					<input id="delete" onclick="openWindow('./accDel.html?action=vm&id=<? print $id;?>',500,500,'block');" value="Delete" class="w3-center w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue" >
+				<? } ?>
+		<input id="submit" onclick="this.disabled=true; this.value='Saving…';accAdd('<? print $action; ?>');"  value="Save" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+		<input id="close" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class="w3-center w3-button w3-blue w3-text-white w3-hover-light-blue" >
+	</div>
+    </form>
+    
+	
+	</div>
+   
+	
+ <? } 
+ 
+ //------------------------ Rec Ends  -----------------------------
+
+
+
+ 
+ } else { print "Select registrar"; }?>
+<div id="msg" style="width:100%;"class="w3-text-red w3-center" >
+    </div> 
+  </body>
+</html>

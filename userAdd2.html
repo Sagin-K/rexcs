@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./w3.css">
+	<link rel="stylesheet" href="./../../jquery/jquery-ui.css">
+	<script src="./../../jquery/jquery-1.10.2.js"></script>
+	<script src="./../../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+	<link rel="stylesheet" href="./../../jquery/style.css">
+	<script src="./datepicker.js"></script>
+	<script src="./login1.js"></script>
+	<style>
+	 html, body {
+      min-height: 100%;
+      }
+	  
+      body, div, form, input, select, textarea, label { 
+      padding: 0;
+      margin: 0;
+      outline: none;
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 12px;
+      color: #666;
+      line-height: 15px;
+      }
+      h1 {
+      position: absolute;
+      margin:0;
+      font-size: 60px;
+      color: #fff;
+      z-index: 2;
+      line-height: 83px;
+      top:30px;
+      }
+      legend {
+      padding: 10px;      
+      font-family: Roboto, Arial, sans-serif;
+      font-size: 18px;
+	  capitalize;
+      color: #18303c;
+      }
+      textarea {
+      width: calc(80% - 12px);
+      padding: 5px;
+      }
+      .testbox {
+      display: flex;
+	  width: 100%;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      padding: 20px;
+      }
+      form {
+      width: 100%;
+      padding: 20px;
+      border-radius: 6px;
+      //border: brown;
+      background: #fff;
+      //box-shadow: 0 0 8px #006622; 
+      }
+      .banner {
+      position: relative;
+      height: 250px;
+      background-image: url("/uploads/media/default/0001/02/cc6bc584f236c7234947015b89151ab6d04c4cbf.jpeg");  
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .banner::after {
+      content: "";
+      background-color: rgba(0, 0, 0, 0.4); 
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      }
+      input, select, textarea {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      }
+      input {
+      width: 30%;
+      padding: 10px;
+      }
+      input[type="date"] {
+      padding: 4px 5px;
+      }
+      textarea {
+      width: calc(80% - 20px);
+      padding: 5px;
+      }
+      .item:hover p, .item:hover i, .question:hover p, .question label:hover, input:hover::placeholder {
+      color:  #006622;
+      }
+      .checkbox input[type=checkbox] {
+      display:inline-block;
+      height:15px;
+      width:15px;
+      margin-right:5px;
+      vertical-align:text-top;
+      }
+      .item input:hover, .item select:hover, .item textarea:hover {
+      border: 1px solid transparent;
+      box-shadow: 0 0 3px 0  #006622;
+      color: #006622;
+      }
+      .item {
+      position: relative;
+      margin: 10px 0;
+      }
+      .item span {
+      color: red;
+      }
+      .week {
+      display:flex;
+      justfiy-content:space-between;
+      }
+      .colums {
+      display:flex;
+      justify-content:space-between;
+      flex-direction:row;
+      flex-wrap:wrap;
+      }
+      .colums div {
+      width:30%;
+      }
+      .columns2 {
+      display:flex;
+      justify-content:space-between;
+      flex-direction:column;
+      flex-wrap:wrap;
+      }
+      .colums2 div {
+      width:50%;
+      }
+      input[type=radio], input[type=checkbox]  {
+      display: none;
+      }
+      label.radio {
+      position: relative;
+      display: inline-block;
+      margin: 5px 20px 15px 0;
+      cursor: pointer;
+      }
+      .question span {
+      margin-left: 30px;
+      }
+      .question-answer label {
+      display: block;
+      }
+      label.radio:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      }
+      input[type=radio]:checked + label:before, label.radio:hover:before {
+      border: 2px solid  #006622;
+      }
+      label.radio:after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 5px;
+      width: 8px;
+      height: 4px;
+      border: 3px solid  #006622;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      opacity: 0;
+      }
+      input[type=radio]:checked + label:after {
+      opacity: 1;
+      }
+      .flax {
+      display:flex;
+      justify-content:space-around;
+      }
+      .btn-block {
+      margin-top: 10px;
+      text-align: center;
+      }
+      button {
+      width: 150px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px; 
+      background:  #1c87c9;
+      font-size: 16px;
+      color: #fff;
+      cursor: pointer;
+      }
+      button:hover {
+      background:  #0692e8;
+      }
+      @media (min-width: 568px) {
+      .name-item, .city-item {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      }
+      .name-item input, .name-item div {
+      width: calc(30% - 50px);
+      }
+      .name-item div input {
+      width:80%;}
+      .name-item div label {
+      display:block;
+      padding-bottom:25px;
+      }
+      }
+	  </style>
+<?
+
+	include("./header.php");
+	//include("./userAccess.php");
+	$action="add";
+
+ //---------------------NEW-----------------------------------------
+  	$id="";
+  	$page="add";
+  	$rly="";		$divn="";
+  	$name="";		$email="";
+  	$desig=""; 		//$dept="";
+	$cug="";		$passwd="";
+  	$access="";		$accountStatus="";
+  	$user_type="";
+  	
+  //------------------ON EDIT--------------------------------------------
+  if(isset($_GET['action'])){
+  	$action=$_GET['action'];
+	$page=$action;
+  	if($action!='add' && $action!='signup' && ($action=='change' || $action=='edit')){
+  		if(isset($_GET["id"])){
+		$id=$_GET['id'];
+		}
+  		$query="SELECT * FROM $userTable WHERE id=\"$id\"";
+		//print $query;
+  		$d=mysqli_query($conn,$query);
+  		$data=mysqli_fetch_assoc($d);
+  		$rly=$data['rly'];			$divn=$data['divn'];
+  		$name=$data['name'];		$email=$data['email'];
+  		$desig=$data['desig']; 		//$dept=$data['dept'];
+  		$cug=$data['cug'];			$passwd=$data['passwd']; 		$accountStatus=$data['accountStatus'];
+  		$access=$data['access'];	$user_type=$data['user_type']; 
+  	}
+  }
+?>
+
+
+<title> User Add</title>
+</head>
+
+
+  </head>
+  <body>
+		
+    <div id="signupdiv" class="testbox w3-display-container"  width='100%'>
+    <form>
+		<input type="hidden" id="id" value="<? print $id;?>">		
+		
+		<div class="sticky w3-bar w3-border-bottom w3-border-brown">
+		  <div class="w3-bar-item w3-large" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		  <? print $page;?>  User
+		  </div>
+		</div>
+		<div id="mainForm" >
+        <? if($page!='change' && $page!='activate'){ ?>
+		<div class="colums"> 
+		  <div class="item">
+				<label for="rly"  style="width:100%"> Zone <span>*</span></label>
+				<select id="rly" name="rly" style="height:35px;padding:10px" >
+								<? 	$catList=array(	'Central Railway'=>'CR',
+													'Eastern Railway'=>'ER',
+													'East Central Railway'=>'ECR',
+													'East Cost Railway'=>'ECoR',
+													'Northern Railway'=>'NR',
+													'North Central Railway'=>'NCR',
+													'North Eastern Railway'=>'NER',
+													'North Frontier Railway'=>'NFR',
+													'North Western Railway'=>'NWR',
+													'Southern Railway'=> 'SR' ,
+													'South Central Railway'=>'SCR',
+													'South East Central Railway'=>'SECR',
+													'South Western Railway'=>'SWR',
+													'South Eastern Railway'=>'SER',
+													'Western Railway'=>'WR',
+													'Western Central Railway'=>'WCR'
+													);
+								foreach($catList as $key => $val) {
+									if($val==$rly){
+										print "<option value=\"{$val}\" selected>{$key}</option>";
+									}else{
+										print "<option value=\"{$val}\" >{$key}</option>";
+										}
+								}
+							?>
+					</select>
+				<div id="rly_msg" style="width:100%"></div>
+		  </div>
+          <div class="item">
+				<label for="divn"> Division <span>*</span></label>
+				<input type="text" id="divn" name="divn" value="<? print $divn; ?>" onkeyup="scanDb(this.id);" placeholder="eg: PGT *[SHORT-CODE of Division without SPACE]" style="width:100%">
+				<div id="divn_msg" style="width:100%"></div>
+		  </div>
+          <div class="item">
+           <div style="width:100%"> <i class="w3-text-red w3-tiny">* [ Please use SHORT-CODE of Railway and Division without SPACE ]</i></div>
+          </div>
+          
+          <div class="item">
+            <label for="name"> Full Name <span>*</span></label>
+            <input type="text" id="name" name="name" value="<? print $name; ?>" onkeyup="scanDb(this.id);" placeholder="full name" style="width:100%">
+			<div id="name_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="email"> Email <span>*</span></label>
+            <input type="text" id="email" name="email" value="<? print $email; ?>" onkeyup="scanDb(this.id);" placeholder="Email" style="width:100%">
+			<div id="email_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <div style="width:100%"> <i class="w3-text-red w3-tiny">** [ Email address will be the Username ]</i></div>
+          </div>
+          
+          <div class="item">
+            <label for="desig"> Designation <span>*</span></label>
+             <input type="text" id="desig" name="desig" value="<? print $desig; ?>" onkeyup="scanDb(this.id);" placeholder="eg. SSE/T/HQ/PGT" style="width:100%">
+			 <div id="desig_msg" style="width:100%"></div>
+		  </div>
+          <div class="item">
+            <label for="cug"> C.U.G. Number <span>*</span></label>
+            <input type="text" id="cug" name="cug" value="<? print $cug; ?>" onkeyup="scanDb(this.id);" placeholder="C.U.G/Mob No." style="width:100%">
+			<div id="cug_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            
+          </div>
+          
+          <?}
+			if($page!='edit' && $page!='activate'){ 
+            if($page=='change'){ ?>
+			
+			Name: <? print $name; ?><br>
+			Username: <? print $email; ?><br>
+			CUG :<? print $cug; ?><br><hr>
+			
+          <div class="item">
+            <label for="cur_passwd"> Current Password <span>*</span></label>
+            <input type="password" id="cur_passwd" name="cur_passwd" placeholder="Current Password" style="width:100%">
+			<div id="cur_passwd_msg" style="width:100%"></div>
+          </div>
+		  <? } ?> 
+          <div class="item">
+            <label for="passwd"> Password <span>*</span></label>
+            <input type="password" id="passwd" name="passwd" placeholder="New Password" onkeyup="scanDb(this.id);" style="width:100%">
+			<div id="passwd_msg" style="width:100%"></div>
+          </div>
+          <div class="item">
+            <label for="c_passwd"> Re-enter Password <span>*</span></label>
+            <input type="password" id="c_passwd" name="c_passwd" placeholder="Confirm Password" onkeyup="scanDb(this.id);" style="width:100%">
+			<div id="c_passwd_msg" style="width:100%"></div>
+          </div>
+		  <div class="item">
+            
+          </div>
+        </div>
+		
+		  <? }  if(($page!='signup' && $page!='change' && $page!='activate')&& $_SESSION['astaccess']=='admin'){ ?>
+		  <div class="colums"> 
+		  <div class="item">
+			<label for="accountStatus"> Status </label>
+			<select type="text" id="accountStatus" value="<? print $accountStatus; ?>" name="accountStatus" placeholder="pending" style="width:100%;height:35px;padding:10px">
+              <option value="inactive" <? if($accountStatus=="inactive"){print "selected";}?>>Inactive</option>
+              <option value="active" <? if($accountStatus=="active"){print "selected";}?>>Active</option>
+              <option value="suspended" <? if($accountStatus=="suspended"){print "selected";}?>>Suspend</option>
+              <option value="deleted" <? if($accountStatus=="deleted"){print "selected";}?>>Delete</option>
+              <option value="blocked" <? if($accountStatus=="blocked"){print "selected";}?>>Block</option>
+            </select>
+          </div>
+		  <div class="item">
+            <label for="access"> Access </label>
+			<select type="text" id="access" name="access"  placeholder="user" style="width:100%;height:35px;padding:10px">
+              <option value="self" <? if($access=="self"){print "selected";}?>>Self</option>
+              <option value="siteadmin" <? if($access=="branchAdmin"){print "selected";}?>>Site Admin</option>
+              <option value="admin" <? if($access=="admin"){print "selected";}?>>Admin</option>
+              <option value="blocked" <? if($access=="blocked"){print "selected";}?>>Blocked</option>
+            </select>
+          </div>
+		  <div class="item">
+            <label for="user_type"> Account Type </label>
+            <select type="text" id="user_type" name="user_type"  placeholder="September" style="width:100%;height:35px;padding:10px">
+              <option value="divn_admin" <? if($user_type=="divn_admin"){print "selected";}?>>Divn Admin</option>
+              <option value="zonal_admin" <? if($user_type=="zonal_admin"){print "selected";}?>>Zone Admin</option>
+              <option value="siteadmin" <? if($user_type=="siteadmin"){print "selected";}?>>Site Admin</option>
+              <option value="admin" <? if($user_type=="admin"){print "selected";}?>>Admin</option>
+            </select>
+          </div>
+          </div>
+		   <? } ?>
+		  
+		
+		<? if ($page=="activate"){ ?>
+		<div class="columns2">
+			<h4> On successfull registration, Activation Key will be mailed to your registered mail ID </h4> <br> [Please check your mail inbox or junk folder for the mail from rexcs.ir@gmail.com]
+				
+		<div class="item w3-padding-32">
+            <label for="email"> Username (Email ID)</label><br>
+			<input type="email" id="email" name="email" placeholder="Please enter username ( email ID )" style="width:250px"><br>
+			<label for="key"> Activation Key </label><br>
+			<input type="text" id="key" name="key" placeholder="Please enter Activation Key" style="width:250px">
+        </div>
+		 		
+	
+		 		
+		</div>
+	
+		<? } ?>
+		</div>
+		<div class="columns2">
+				
+			<div class="item w3-border-bottom w3-border-brown">
+			</div>
+		 		
+		</div>
+		 
+      
+      <div class="btn-block w3-right">
+		<? if ($page=="edit"){ ?>
+					<input id="delete" onclick="userRegForm('delete');" value="Delete" class="w3-left w3-button w3-border w3-border-red w3-text-red w3-hover-light-blue w3-small" >
+				<? } ?>
+		<input id="close" onclick="window.location.reload();"  value="Close" class="w3-right w3-button w3-border w3-border-blue w3-text-blue w3-hover-light-blue w3-small" > &nbsp;&nbsp;
+		<input id="submit" onclick="this.disabled=true; this.value='Sendingg…';userRegForm('<? print $page; ?>');"  value="Save" class="w3-right w3-button w3-border w3-border-blue w3-text-blue w3-hover-light-blue w3-small" >
+	  </div>
+    </form>
+	<div id="msg" class="w3-medium w3-text-red w3-display-bottommiddle w3-white w3-center" style="width:100%" ></div>
+	</div>
+	
+	<div class="w3-panel  w3-padding"  > 
+	  <input id="activate" style="display:none" onclick="addPage('0','user','activate','Nil');"  value="Activate Now" class=" w3-right w3-button w3-text-green w3-hover-green w3-border  w3-border-green" >
+	  <input id="exit" style="display:none" onclick="document.getElementById('id01').style.display='none';window.location.reload();"  value="Close" class=" w3-right w3-button w3-text-blue w3-hover-light-blue w3-border  w3-border-blue" >
+	
+	</div>
+	
+</body>
+</html>

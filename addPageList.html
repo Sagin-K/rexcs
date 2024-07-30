@@ -1,0 +1,86 @@
+<html>
+<title>addPages</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./../jquery/jquery-ui.css">
+<script src="./../jquery/jquery-1.10.2.js"></script>
+<script src="./../jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./../jquery/style.css">
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+
+
+html,body,h1,h2,h3,h4,h5 {font-family: serif
+}
+input[type=text], select {
+  width: 100%;
+  margin: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+select {
+  /* for Firefox */
+  -moz-appearance: none;
+  /* for Chrome */
+  -webkit-appearance: none;
+  
+}
+
+/* For IE10 */
+select::-ms-expand {
+  display: none;
+  
+}
+</style>
+
+<body style="background:#EBF5FB">
+<?
+date_default_timezone_set('Asia/Kolkata');
+//$rootDirLoc="./";
+//session_start();
+include('./userAccess.php');
+$dbName="iriset";
+$page="";
+if((isset($_GET['type'])) && ($_GET['type']!="")){
+$type=$_GET['type'];
+
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['type']=="acc"){
+include ('./form2.html');
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['type']=="reg"){
+include ('./servPopup.html');
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['type']=="user"){
+include ('./userAdd2.html');
+}
+//////////////////////////////////////////////////////// Dashboard ///////
+if($_GET['type']=="update"){
+include ('./updates.php');
+}
+if($_GET['type']=="features"){
+include ('./featuresAdd.php');
+}
+if($_GET['action']=="delete"){
+include ('./accDel.html');
+}
+	
+}?>
+</body>
+</html>

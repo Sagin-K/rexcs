@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<? session_start();?>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./jquery/jquery-ui.css">
+<script src="./jquery/jquery-1.10.2.js"></script>
+<script src="./jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./jquery/style.css">
+<script src="./jscriptsrc/clock.js"></script>
+<script src="./login1.js"></script>
+
+<script>
+//----------- Time ------------
+	$(document).ready(function() {
+		setInterval(timestamp, 1000);
+	});
+
+	function timestamp() {
+		$.ajax({
+			url: './timestamp.php',
+			success: function(data) {
+				//alert (data);
+				$('#timestamp').html(data);
+			},
+		});
+	}
+
+
+
+	function formatDate(id){
+		var d=document.getElementById(id).value;
+		//alert("Note Date:"+d);
+		if(d.indexOf('/')>=0){
+			var tmp=d.split('/');
+			x=tmp[2]+"-"+tmp[0]+"-"+tmp[1];
+			document.getElementById(id).value=x;
+		}
+		return;
+	}
+
+</script>
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+body {font-size: 16px;}
+img {margin-bottom: -8px;}
+.mySlides {display: none;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 1% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 85%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+</style>
+<title>REXCS:Login</title>
+</head>
+<? include("./header.php"); ?>
+<div id="id01" class="modal"> 
+	<div class="modal-content animate" >
+		<!--------------------------- Popup Page CONTENT! ------------------------------------------>
+		<div class="w3-small" style="overflow-x: auto;height:85%;overflow:auto;width:100%"  >
+			
+			<div id="popup" style="width:100%;">
+				
+			</div>
+		<!------------------- End page content ---------------------------------->
+		</div>
+		
+	</div>
+</div>
+
+<body style="background-image:url('/images/wallpaper1.webp');background-repeat:repeat;background-position: auto;">
+<!-- Header Section -->
+<!--div class="w3-row w3-large w3-padding-16" >
+<div class="w3-large w3-padding-16" style="background:#18303c;opacity:0.6;height:150px"></div>
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-left w3-padding w3-display-topleft" style="margin-top:2%;margin-left:2%">
+		<span style="font-family: Georgia, serif;text-shadow: 2px 2px 2px #E5AA70;color:#FFF8DC;" ><b>RExCS</b></span>
+		<br><i class="w3-large w3-text-brownr w3-opacity w3-text-white" >An ASTERISK based solution for Indian Railways' IP Exchange Management</i>
+	</div>
+	<div class=" w3-hide-large w3-xxlarge w3-center  w3-top" >
+		<span style="text-shadow: 1px 1px 2px black;color:brown " ><b>RExCS</b></span>
+		<br><p class="w3-medium w3-text-blue" ></p>
+	</div>
+	<div class=" w3-hide-small w3-hide-medium w3-xxlarge w3-Right w3-padding" >
+		
+		
+	</div>
+
+</div-->
+
+<!-- Center Portion -->
+
+
+<!--div class="w3-row" >
+  <!--img src="/images/wallpaper4.jpg"  alt="Lights" style="height:500px;width:100%"-->
+    <!----- Description --->
+	<!--div class="w3-col l9 m12 w3-padding w3-text-white"> 
+		<h1 class="w3-large ">
+		<p><b>The Railways Exchange Management System (RExCS)</b>
+		is web-based application developed by Indian Railways to manage its voice communication requirements.</p>
+		<p>Indian Railways has adopted an Asterisk-based VOIP soution for its Voice communiacation needs,
+		which is a software platform used for building communication 
+		applications such as VOIP telephony system, Video conferencing and messaging applications. 
+		the software supports a veriety of protocols and codecs for communication over the internet, including SIP, h.232 and IAX</p>
+		<p> To simplify the configuration and Management of Asterisk-based VOIP Exchanges in IR, RExCS will offer a Graphical User Interface </p>
+		
+		
+		</h1>
+		
+		
+		
+		
+    </div>
+	
+<!-- Login Field -->
+	<div class="w3-col l3 m12 w3-border w3-border-white w3-round-large w3-display-middle" >  <!----- Login style="background:#18303c;opacity:0.6;" -->
+      
+		<center >
+			<div class="w3-xxlarge" >
+			 <span class=" w3-large w3-text-blue" ><img src="./images/rexcs8.jpg" class=" w3-border w3-border-white w3-round-large" style="width:100%;background:#18303c;opacity:0.9;"></span>
+			</div>
+			
+			<div id="logstatus" class=" w3-text-red"><h2 class="w3-text-blue w3-large"></h2></div>
+			<br>
+			<div class="w3-container w3-padding-32">
+				<input class="w3-container w3-padding-16 w3-round-large" id="uname" type="text" placeholder="Username(email id)" name="email">
+			</div>
+			<div class="w3-container w3-padding-32">
+				<input class="w3-container w3-padding-16 w3-round-large" id="upswd" type="password" placeholder="Password" name="psw">
+			</div>
+			<div class="w3-container w3-padding">
+				<button  onclick="formSubmit()" id="login" class="w3-button w3-text-white w3-round-large w3-blue w3-hover-green w3-border w3-border-black" style="align:center;height:50px;width:230px;box-shadow: 3px 3px 3px black; "> LOGIN </button>
+				
+			</div>
+			<br>
+			<div id="signup" class="w3-medium">
+				<a  onclick="addPage('0','user','signup','Nil');" class=" w3-text-blue w3-hover-text-white">Create New Account</a>
+			</div><br>
+			<div id="activate" class="w3-medium">
+				<a  onclick="addPage('0','user','activate','Nil');" class=" w3-text-blue w3-hover-text-white"> Activate Account</a>
+			</div><br>
+			
+		</center>
+	</div>
+<!--/div-->
+
+<!-- Header ---->
+<div class=" w3-display-topright w3-padding w3-text-grey w3-medium"  style="z-index:5" >
+			<div class="w3-bar ">
+				<a href="./directory.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Directory</a>
+				<a href="./updateList.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Updates</a>
+				<a href="./uploads/Prerequisite.pdf" class="w3-bar-item w3-button w3-border-right w3-hover-blue" download>Prerequisite</a>
+					
+				<div class="w3-dropdown-hover w3-border-right w3-hide-medium w3-hide-small">
+				  <button class="w3-button w3-hover-blue">How To</button>
+				  <div class="w3-dropdown-content w3-bar-block w3-card-4">
+					<a href="./uploads/Prerequisite.pdf" class="w3-bar-item w3-button" download>Prerequisite</a>
+					<a href="./configfiles/install" class="w3-bar-item w3-button" download>REXCL Install file</a>
+					<a href="https://github.com/ptiriset/Asterisk" class="w3-bar-item w3-button">GitHub </a>
+					<a href="https://www.asterisk.org/" class="w3-bar-item w3-button">Asterisk</a>
+				  </div>
+				</div>
+				
+				<a href="./help.html" class="w3-bar-item w3-button w3-border-right w3-hover-blue">Help</a>
+				<span class="w3-bar-item w3-right  w3-hide-medium w3-hide-small" id="timestamp"></span>
+
+			</div>
+	</div>	
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-32 w3-center w3-xlarge w3-hide-small w3-hide-medium w3-bottom" style="opacity:0.8;">
+  
+  <p class="w3-medium w3-display-bottommiddle w3-text-white w3-opacity" >&copy; All rights reserved with IRISET. **** <i class="w3-text-white">Please share Queries and Suggestions:  <a href="./help.html#contact" class="w3-hover-white">Contact</a></i></p>
+  
+</footer>
+
+
+</body>
+</html>

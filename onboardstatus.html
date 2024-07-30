@@ -1,0 +1,118 @@
+	<?
+	include('./header.php');
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+//--------------Registrars -----------//
+		$q="select COUNT(DISTINCT reg1_name) AS regcount, divn, rly FROM $regTable GROUP BY divn,rly ORDER BY rly ";
+		//print $q;
+		$sn=1; 
+		$zn=0; 
+		$dn=1; 
+		$zone=""; 
+		$totalAccounts=0; 
+		$totalregcount=0; 
+		$totalusers=0;
+		$zoneList=array('0'=>'#fdfbf6',
+						'1'=>'#f7f9f7'
+						);		
+	?>
+	<div >
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">On-Board Status</b></div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="window.print()"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> PRINT</i> </button></div>
+		</div>
+		
+			<table class="w3-table w3-card w3-border-white" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="5%">S.N</th>
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">Division </th>
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">registrars</th>
+					<th width="25%" style="text-transform:uppercase;border-left:1px solid white">Accounts</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Rexcs Users</th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+				if($zone!=strtoupper($d['rly'])){
+				$zone=strtoupper($d['rly']);
+				$sn=1;
+				$zn++;
+				?>
+				<tr  valign="top"  style="background-color:<? print $zoneList[$zn%2];?>;text-align:left;text-transform:capitalize;">
+					<td colspan=6  class="w3-padding" style="text-transform:uppercase;border-top:3px solid white">
+						<b class="w3-large w3-text-blue"><? print $zn;?></b>. <b class="w3-large w3-text-blue"><? print $d['rly'];?></b>
+					</td>
+				</tr>
+				<?
+				}
+				?>
+				<tr  valign="top"  class="w3-medium" style="background-color:<? print $zoneList[$zn%2];?>;text-align:left;text-transform:capitalize;border-top: 2px solid <? print $zoneList[$zn%2];?>;">
+					<td width="5%">
+						
+					</td>
+		
+					<td width="25%" style="text-transform:uppercase;">
+						<? print $sn;$sn++;$dn++;?>. <b class="w3-medium"><? print $d['divn'];?></b>
+					</td>
+					
+					<td width="25%" style="text-transform:uppercase;border-left:1px solid white">
+						<b class="w3-medium"><? print $d['regcount']; $totalregcount+=$d['regcount']; ?></b>
+					</td>
+					
+					
+					<td width="25%" style="text-transform:uppercase;border-left:1px solid white">
+						<? 		$accounts=0;
+								$q1="SELECT * FROM $regTable where rly='".$d['rly']. "' AND divn='".$d['divn']."'";
+						 		$q2="SELECT COUNT(*) as accounts FROM $accTable where server_id!='' ";
+								$n=1;
+								$s1=mysqli_query($conn,$q1);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){
+									if ($n==1){ $q2.=" AND ( "; } else { $q2.=" OR "; }
+									$n++;
+									$q2.=" server_id=".$d1['id'];
+								}
+									$q2.=")";
+									$s2=mysqli_query($conn,$q2);
+									if(!(!$s2) || mysqli_num_rows($s2)>0){
+									while($d2=mysqli_fetch_assoc($s2)){ 
+										$accounts= $d2['accounts'];
+									}}
+								}
+							Print "<b class=\"w3-medium\">".$accounts."</b>";
+							$totalAccounts+=$accounts;
+							?>
+					</td>
+					
+					<td width="20%" style="text-transform:capitalize;border-left:1px solid white" >
+						<? 	
+								$q1="SELECT COUNT(DISTINCT email) as usercount FROM $userTable where rly='".$d['rly']. "' AND divn='".$d['divn']."'";
+								$s1=mysqli_query($conn,$q1);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print "<b class=\"w3-medium\">".$d1['usercount']."</b>";
+									$totalusers+=$d1['usercount'];
+								}}
+							
+							?>
+					</td>
+					
+				</tr>
+	<?		}
+		}
+			 ?>
+			 <tr class="w3-medium w3-text-blue w3-bold w3-padding-32"> 
+			 <td ></td>
+			 <td ><? print "Zones-".$zn ." <br> Divisions-".$dn-1;?></td>
+			 <td ><? print "VOIP Echanges-".$totalregcount;?></td>
+			 <td ><? print "Accounts-".$totalAccounts;?></td>
+			 <td ><? print "Users-".$totalusers;?></td>
+			 </tr>
+			</table>
+		  </div>
+		 <br><br>

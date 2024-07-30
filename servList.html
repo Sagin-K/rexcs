@@ -1,0 +1,813 @@
+<?
+date_default_timezone_set('Asia/Kolkata');
+include("./createTables.php");
+include("./header.php");
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+//confTable();
+$rootDirLoc="./";
+$rowColor=array(''=>'#C1EDEE',
+				'reg'=>'#FBFCFC ',
+				'icom'=>'#FBFCFC ',
+				'ip2'=>'#FBFCFC',
+				'analog'=>'#FBFCFC',
+				'gw'=>'#FBFCFC ',
+				'route'=>'#FBFCFC ',
+				'default'=>'#FBFCFC ',
+				'attended'=>'#FBFCFC',
+				'fxs'=>'#FBFCFC ',
+				'fxo'=>'#FBFCFC',
+				'pri'=>'#FBFCFC',
+				'exch'=>'#FBFCFC ',
+				'sip'=>'#FBFCFC'
+				
+							);
+
+$search1="where rly='$rly' and divn='$divn' ";
+$search="";
+$find="";
+$details="";
+$rly1=$rly;
+$divn1=$divn;
+	
+
+if((isset($_GET['acc_type'])) && ($_GET['acc_type']!="")){
+	$acc_type=$_GET['acc_type'];
+	}
+if((isset($_GET['rly'])) && ($_GET['rly']!="")){
+	$rly1=$_GET['rly'];
+	$divn1=$_GET['divn'];
+	$search1="where rly='$rly1' and divn='$divn1' ";
+	}
+
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+if($acc_type=="reg"){ $search.=" AND (reg1_name RLIKE '$find' OR reg2_name RLIKE '$find' OR location RLIKE '$find') "; }
+if($acc_type=="icom"){$search.=" AND (icom_name RLIKE '$find' OR department RLIKE '$find') ";}
+if($acc_type=="gw"){$search.=" AND (gw_name RLIKE '$find' OR type RLIKE '$find') ";}
+if($acc_type=="route"){$search.=" AND (route_name RLIKE '$find' OR pattern RLIKE '$find') ";}
+}							
+if((isset($_GET['req_type'])) && ($_GET['req_type']!="")){
+$find=$_GET['req_type'];
+$search.=" AND req_type='$find' ";
+}							
+							
+if((isset($_GET['rly_no'])) && ($_GET['rly_no']!="")){
+$find=$_GET['rly_no'];
+$search.=" AND rly_no='$find' ";
+}														
+if((isset($_GET['acc_name'])) && ($_GET['acc_name']!="")){
+$details="show";
+$find=$_GET['acc_name'];
+$search.=" AND acc_name='$find' ";
+}							
+							
+							
+//print $search;
+?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+function myFunction() {
+  var x = document.getElementById("Demo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 1px;
+  font-size: 20px;
+  z-index: 2;
+  overflow: visible;
+}
+tr.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60;
+  background-color: yellow;
+  padding: 5px;
+  font-size: 20px;
+}
+din.demo{
+ z-index: 1;
+ }
+ 
+ 
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 1% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 85%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+</style>
+<body style="background:#EBF5FB ">
+
+<?			
+//------------------------------------------------------------------------ Registrar List -----------------------------------------//			
+
+
+		
+			
+		if ($_GET['acc_type']=="reg"){
+		$q="SELECT * FROM $regTable ";
+		$q.=$search1.$search;
+		$q.=" ORDER BY reg1_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div  >
+		<div class="sticky w3-bar " >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Registrars</div>
+		</div>
+		<div class="sticky w3-bar " >
+			<i class="w3-large w3-text-grey w3-padding" >  <? print " [". $divn1." division /". $rly1."]"; ?></i> 
+			<div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');" >
+				<button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button>
+			</div>
+		</div>
+		
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="5%">S.N</th>
+					<th width="30%" style="border-left:1px solid white">Registrar</th> 
+					<th width="10%" style="border-left:1px solid white">STD Codes</th>
+					<th width="10%" style="border-left:1px solid white">Length of Number</th>
+					<th width="20%" style="border-left:1px solid white">Accounts Created </th>
+					<th width="10%" style="align:center;border-left:1px solid white"></th>
+					<th width="10%" style="border-left:1px solid white">Updated</th>
+					<th width="5%" style="border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top" class=" w3-small w3-hover-light-grey w3-border-white" style="text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						<? print $sn;$sn++?></td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<div>
+						<div > <b class='w3-medium w3-text-blue'><? print $d['reg1_name']; ?></b> 
+						<button id="<? print $d['id']; ?>_status" class="w3-right w3-white w3-text-grey w3-round w3-border w3-border-grey" onclick="IPstatus('<? print $d['id']; ?>')"> Check Status </button>
+						<br>
+						(<i class="w3-opacity w3-tiny" > Location </i>: <b class='w3-small w3-text-black'><? print $d['location']; ?></b>) </div>
+						<!--------------------------IP of server --------------------->
+						<div>
+							<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_1"><i class='fa fa-circle  w3-text-grey' aria-hidden='true'></i></b> Primary Server</i></div>
+							<div class="w3-half">:  <b class='w3-medium w3-text-blue'><? print $d['reg1_ip']; ?></b></div>
+						</div>
+						<? if ($d['installed1_on']!=""){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >Installed ON</i></div>
+								<div class="w3-half">  : <b class='w3-tiny'><? echo date('H:i:s d-m-Y', strtotime($d['installed1_on'])) ?></b></div>
+							</div>
+						<? } if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >.</i></div>
+								<div class="w3-half"> <a class="w3-text-blue w3-hover-text-red w3-small" onclick="addPages('2','reg','install','nil');">
+									<i class="fa fa-cloud-download w3-small" aria-hidden="true" disabled></i> <? if ($d['installed1_on']!=""){ print "Re-";} ?>Install RExCS</a>
+								</div>
+							</div>
+						<? } ?>
+						<? if ($d['reg2_ip']!=""){ ?>
+							<div>
+								<div class="w3-half"> <i class="w3-opacity w3-tiny" ><b id="<? print $d['id']; ?>_2"><i class='fa fa-circle  w3-text-grey' aria-hidden='true'></i></b> Redundant Server</i></div>
+								<div class="w3-half">:  <b class='w3-medium w3-text-blue'><? print $d['reg2_ip']; ?></b></div>
+							</div>
+						<? if ($d['installed2_on']!=""){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' >Installed ON</i></div>
+								<div class="w3-half">  : <b class='w3-tiny'><? echo date('H:i:s d-m-Y', strtotime($d['installed2_on'])) ?></b></div>
+							</div>
+						<? } if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ ?>
+							<div>
+								<div class="w3-half"><i class='w3-opacity w3-tiny' > .</i></div>
+								<div class="w3-half"> <a class="w3-text-blue w3-hover-text-red w3-small" onclick="addPages('3','reg','install','nil');">
+									<i class="fa fa-cloud-download w3-small" aria-hidden="true" disabled></i> <? if ($d['installed2_on']!=""){ print "Re-";} ?> Install RExCS</a>
+								</div>
+							</div>
+						<? } }?>
+						</div>
+					</td>
+					
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >Railway </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['rly_code']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >PSTN </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['pstn_code']; ?></b></div>
+						</div>
+					</td>
+					
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >Railway </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['rly_no_length']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >I.Com </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $d['icom_no_length']; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" > PSTN </i> </div><div class="w3-half">: <b class='w3-medium w3-text-blue'><? print $d['pstn_no_length']; ?></b></div>
+						</div>
+					</td>
+					<td width="10%" style="border-left:1px solid #F8F9F9">
+						<div>
+						<? 	$q1="SELECT COUNT(DISTINCT icom_name) as icoms, COUNT(DISTINCT acc_name) as accounts ";
+							$q1.="FROM $accTable ";
+							$q1.="WHERE server_id = '".$d['id']."'  ";
+							//$q1="SELECT COUNT(DISTINCT acc_name) as count FROM $accTable where acc_type='analog' ";
+							$s1=mysqli_query($conn,$q1);
+							while($d1=mysqli_fetch_assoc($s1)){
+								$icomcount=$d1['icoms'];
+								$accountcount=$d1['accounts'];
+								
+						?>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" >I.Coms </i></div><div class="w3-half"> : <b class='w3-medium w3-text-blue'><? print $icomcount; ?></b></div>
+						<br>
+						<div class="w3-half"> <i class="w3-opacity w3-tiny" > Accounts </i> </div><div class="w3-half">: <b class='w3-medium w3-text-blue'><? print $accountcount; ?></b></div>
+						<? }
+						?>
+						</div>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9" class=" w3-tiny">
+						<? if (isset($_SESSION['registrar']) && $_SESSION['registrar']==$d['id']){ print "This server is selected for Configuration."; }
+						elseif($userid==$d['owner']){?>
+						<button class="w3-button w3-border w3-round w3-border-blue w3-text-blue w3-hover-blue" onclick="selectReg('registrar','<? print $d['id'] ?>')"><i class="fa fa-cog w3-medium " aria-hidden="true"></i> Configure</button>
+						<? }
+						else {
+						$q1="SELECT * FROM $userTable where id= {$d['updated_by']}";
+						$s1=mysqli_query($conn,$q1);
+								//print mysqli_error($conn);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print "Created By:<br> ".$d1['name']."";
+								}}
+						} ?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;text-align:center;border-left:1px solid #F8F9F9" class='w3-tiny'>
+						<? 
+						$q1="SELECT * FROM $userTable where id= {$d['updated_by']}";
+						$s1=mysqli_query($conn,$q1);
+								//print mysqli_error($conn);
+								if(!(!$s1) || mysqli_num_rows($s1)>0){
+								while($d1=mysqli_fetch_assoc($s1)){ 
+									print $d1['name']."<br>";
+								}}
+						
+						print  date('H:i:s d-m-Y', strtotime($d['updated_on']));?>
+					</td>
+					<td width="5%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['owner']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}else{
+			Print "<b class='w3-xlarge w3-text-red'>Please Add A Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-text-white'><i class='fa fa-plus-circle w3-text-blue  w3-large' aria-hidden='true'></i></a></b> ";
+			}
+			 ?>
+			</table>
+		  </div>
+		  <!------------------------------ Download Rexcl Text file----------------------->
+		<div class="sticky w3-bar " >
+			<i class="w3-large w3-text-grey w3-padding" > Download RExCL Text File</i> 
+		</div>
+		
+		<div class="w3-raw w3-margin-bottom w3-left" style="background:white;width:100%" >
+		<? 
+		$q="select * from $regTable where reg1_name!='' and rly='$rly1' and divn='$divn1' and committed_on IS NOT NULL ";
+		$s=mysqli_query($conn,$q);
+		//print mysqli_error($conn);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		while($d=mysqli_fetch_assoc($s)){
+		print "<a href='/configfiles/".$d['reg1_name']."_".$d['divn']."_".$d['rly']."_rexcl.rexcl' class='w3-button w3-small w3-col 4 l1 w3-border w3-round' download> <i class='fa fa-download w3-text-green' aria-hidden='true'></i> ".$d['reg1_name']."</a>";
+			}
+		}
+		?>
+		</div>
+		<div class="w3-bar ">
+		  <b class="w3-bar-item w3-small w3-text-red" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"> ** Remember to regularly back up your settings to avoid any potential data loss or disruption. ** </b>
+		</div>
+		
+		<?
+			}
+//----------------------------------------------------------- Registrar page ends------------------------------------------------//
+
+//------------------------------------------------------------- Icom page  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="icom"){
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+				}}
+		$q="SELECT * FROM $icomTable where server_id = $registrar ";
+		$q.=$search;
+		$q.=" ORDER BY icom_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div style="width:10 0%">
+		<div class="sticky w3-bar " >
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Intercoms </div>
+		</div>
+		<div class="sticky w3-bar " >
+		  <i class="w3-medium w3-text-grey w3-padding" >  <? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i> 
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button></div>
+		</div>
+			
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Intercom Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Department</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">No. of IP phones</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">No. of Analogue Phones</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+							$ip=$analog="";
+							$icom_name=$d['id'];
+							$q1="  	SELECT icom_name,
+									COUNT(*) as total,
+									SUM(if(acc_type='ip',1,0)) AS ip,
+									SUM(if(acc_type='analog',1,0)) AS analog
+									FROM $accTable
+									WHERE  icom_name='$icom_name'
+									GROUP BY icom_name";
+							$s1=mysqli_query($conn,$q1);
+							if(!(!$s1) || mysqli_num_rows($s1)>0){
+							while($d1=mysqli_fetch_assoc($s1)){ 
+							$ip=$d1['ip'];
+							$analog=$d1['analog'];
+							}}
+				?>
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[$_GET["acc_type"]];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['icom_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['department'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $ip;?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $analog;?>
+					</td>
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['created_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+
+		<?
+			} else{
+			Print "<b class='w3-xlarge w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}}
+	//-----------------------------------------------------------Icom page ends-------------------------------------------------------------------------//
+	//------------------------------------------------------------- Analog Gateway page  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="gw"){
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+				}}
+		$q="SELECT * FROM $gwTable WHERE id!='' and server_id= $registrar AND type!='exch' AND type!='sip' ";
+		$q.=$search;
+		$q.=" ORDER BY gw_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div  >
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Analogue Gateways </div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <i class="w3-medium w3-text-grey  w3-padding" > in  : <? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i></i> 
+		  <!--div class="w3-bar-item w3-right" onclick="window.print()"><i class="fa fa-print w3-text-green  w3-large"></i></div-->
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button></div>
+		</div>
+				
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Gateway Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Gateway Type</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">No. of Ports</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Gatway IP</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[$d["type"]];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['gw_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['type'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['port'];
+						if ($d['type']=="fxs" || $d['type']=="fxo"){?>
+						<!--a href='#' onclick="openWindow('./fxoAdd.html?action=< ? print $d['type'];?>&id=< ? print $d['id'];?>',800,700,'block');" class='w3-button w3-border w3-round w3-border-blue w3-text-blue  w3-hover-blue w3-right'><i class='fa fa-list-ol' aria-hidden='true'></i> Port Details </a-->
+						<? } ?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<a href='#' onclick="window.open('http://<? print $d['gw_ip'];?>');" class=' w3-text-blue'> <? print $d['gw_ip'];?></a>
+						
+					</td>
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['created_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			} else{
+			Print "<b class='w3-xlarge w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}}
+	//-----------------------------------------------------------Gateway page ends-------------------------------------------------------------------------//
+	//------------------------------------------------------------- SIP page  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="sip"){
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+				}}
+		$q="SELECT * FROM $gwTable WHERE id!='' and server_id= $registrar and (type='exch' OR type='sip') ";
+		$q.=$search;
+		$q.=" ORDER BY gw_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div >
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">SIP Profiles </div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <i class="w3-small w3-text-grey  w3-padding" ><? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i></i> 
+		  <!--div class="w3-bar-item w3-right" onclick="window.print()"><i class="fa fa-print w3-text-green  w3-large"></i></div-->
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button></div>
+		</div>
+				
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Exch Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Exch IP</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[$d["type"]];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['gw_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<a href='#' onclick="window.open('http://<? print $d['gw_ip'];?>');" class=' w3-text-blue'> <? print $d['gw_ip'];?></a>
+						
+					</td>
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['created_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			} else{
+			Print "<b class='w3-xlarge w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}}
+	//----------------------------------------------------------- SIP page ends -----------------------------------------------------------------------//
+	//------------------------------------------------------------- Routes page  -----------------------------------------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="route"){
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+				}}
+		$q="SELECT * FROM $routeTable WHERE id!='' and server_id= $registrar";
+		$q.=$search;
+		$q.=" ORDER BY route_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div >
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Routes </div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <i class="w3-small w3-text-grey  w3-padding" ><? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i></i> 
+		  <!--div class="w3-bar-item w3-right" onclick="window.print()"><i class="fa fa-print w3-text-green  w3-large"></i></div-->
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button></div>
+		</div>
+				
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="5%">S.N</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Route Name</th> 
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Pattern</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Gateway 1</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Gateway 2</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Remarks</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[$_GET["acc_type"]];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['route_name'];?>
+					</td>
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['pattern'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$gw_id1=$d['gw_id1'];
+							if ($gw_id1!=""){$q1="SELECT * FROM $gwTable where id = $gw_id1 ";
+							$s1=mysqli_query($conn,$q1);
+							if(!(!$s1) || mysqli_num_rows($s1)>0){
+							while($d1=mysqli_fetch_assoc($s1)){ 
+							print $d1['gw_name'];
+							}}}
+							if ($d['transform1']!="None"){ print " [ ".$d['transform1']." : ".$d['trans_no1']."  ]"; }
+							?>
+					</td>
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? 	$gw_id2=$d['gw_id2'];
+							if ($gw_id2!="N.A"){$q1="SELECT * FROM $gwTable where id = $gw_id2 ";
+							$s1=mysqli_query($conn,$q1);
+							if(!(!$s1) || mysqli_num_rows($s1)>0){
+							while($d1=mysqli_fetch_assoc($s1)){ 
+							print $d1['gw_name'];
+							}}}
+							if ($d['transform2']!="None"){ print " [".$d['transform2']." ( ".$d['trans_no2']." ) ]"; }
+							?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['remark'];?>
+					</td>
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['created_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			} else{
+			Print "<b class='w3-xlarge w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}}
+	//----------------------------------------------------------- Routes page ends-------------------------------------------------------------------------//
+	//------------------------------------------------------------- Conf page  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="conf"){
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+				}}
+		$q="SELECT * FROM $confTable WHERE id!='' and server_id= $registrar";
+		$q.=$search;
+		$q.=" ORDER BY conf_name DESC";
+		//print $q;
+		$sn=1; 
+	?>
+	<div >
+		<div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">Conferences </div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <i class="w3-small w3-text-grey  w3-padding" ><? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i></i> 
+		  <!--div class="w3-bar-item w3-right" onclick="window.print()"><i class="fa fa-print w3-text-green  w3-large"></i></div-->
+		  <div class="w3-bar-item w3-right w3-tiny" onclick="addPages('0','reg','<? print $_GET['acc_type'];?>','nil');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-plus-circle w3-tiny " aria-hidden="true"> CREATE</i> </button></div>
+		</div>
+				
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr class=" w3-small w3-text-blue w3-opacity w3-bold"  style="text-align:left;" valign="top">
+					<th width="10%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Conference Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Conference Type</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Conf. No</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Admin Ph No.</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				?>
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[$d["conf_type"]];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="10%">
+						(<? print $sn;$sn++?>)</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['conf_name'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['conf_type'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['conf_no'];
+						 ?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['conf_admin'];
+						 ?>
+					</td>
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['created_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="addPages('1','reg','<? print $_GET['acc_type'];?>','<? print $d['id'];?>');"></i>
+						<? }?>
+					</td>
+				</tr>
+	<?		}
+		}
+			 ?>
+			</table>
+		  </div>
+		 <br><br>
+		<?
+			} else{
+			Print "<b class='w3-xlarge w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}}
+	//-----------------------------------------------------------Confpage ends-------------------------------------------------------------------------//
+			?>
+
+<div id="id01" class="modal"> 
+	<div class="modal-content animate" >
+		<!--------------------------- Popup Page CONTENT! ------------------------------------------>
+		<div class="w3-small" style="overflow-x: auto;height:85%;overflow:auto;width:100%"  >
+			
+			<div id="popup" style="width:100%;">
+				
+			</div>
+		<!------------------- End page content ---------------------------------->
+		</div>
+		
+	</div>
+</div>
+
+</body>

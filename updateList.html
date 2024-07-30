@@ -1,0 +1,87 @@
+<html>
+<head>
+<link rel="stylesheet" href="./w3.css">
+<link rel="stylesheet" href="./jquery/jquery-ui.css">
+<script src="./jquery/jquery-1.10.2.js"></script>
+<script src="./jquery/jquery-ui.js"></script>	<!--script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script-->
+<link rel="stylesheet" href="./jquery/style.css">
+<script src="./jscriptsrc/clock.js"></script>
+</head>
+<?
+include('./header.php');
+$q="SELECT * FROM updates WHERE version!='' ";
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+$q.=" AND (name RLIKE '$find' OR desig RLIKE '$find') ";
+}
+
+if(isset($_SESSION['astuser']) && $access=="admin"){ 
+?>
+<div class="sticky w3-bar ">
+	<div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">UPDATES </b></div>
+</div>
+		
+<div class="w3-container w3-padding-32">
+	<button class="w3-button w3-red w3-text-white" id="save" style="font-size:10px;"
+	onclick="addPages('0','update','update','nil');"> Add Update <i class="fa fa-plus w3-text-white w3-small"></i></button>
+</div>
+<? } ?>
+<table class="w3-table-all w3-hoverable w3-small" style="word-break:keep-all;padding-top:10px">
+<tr class="w3-teal">
+			<th width="5%">Sl. No.</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Version</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Date</th>
+			<th width="35%" style="text-transform:uppercase;border-left:1px solid white">Update</th>
+			<th width="5%" style="text-transform:uppercase;border-left:1px solid white">RExCS</th>
+			<th width="5%" style="text-transform:uppercase;border-left:1px solid white">RExCL</th>
+			<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Last log</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Updated By</th>
+		</tr>
+	<?
+		$s=mysqli_query($conn,$q);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		$sn=1;
+			while($d=mysqli_fetch_assoc($s)){
+				?>
+
+				<tr  valign="top"  style="text-align:left;height:50px;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+					<td width="10%" style=";border-left:1px solid grey" >
+						<? print $d['version'];?>
+					</td>
+					<td width="10%" style=";border-left:1px solid grey">
+						<? print date('d-m-Y',strtotime($d['date'])); ?>
+					</td>
+					<td width="35%" style=";border-left:1px solid grey">
+						<? print $d['updates'];?>
+					</td>
+					<td width="5%" style=";border-left:1px solid grey">
+						<? print $d['update_rexcl'];?>
+						
+					</td>
+					<td width="5%" style=";border-left:1px solid grey">
+						<? print $d['update_rexcs'];?>
+					</td>
+					<td width="20%" style="border-left:1px solid grey">
+						<? if ($d['log_stamp']!=""){ print date('H:i:s [d-m-Y]',strtotime($d['log_stamp'])); }?>
+					</td>
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid grey">
+					<? if ($user_type=="admin"){ ?>
+						<a href="#" onclick="('delete','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large"><i class="fa fa-trash-o" aria-hidden="true"></i></a> &nbsp;
+						<a href="#" onclick="addPages('1','update','edit','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large "><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+					<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}	else{ ?>
+    <tr  valign="top"  style="text-align:left;height:50px;text-transform:capitalize;">
+        <td colspan="11" >
+          No records </td>
+    </tr>
+
+    <?}
+    ?>
+</table>
+  <hr>
+  </html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./../w3.css">
+<style>
+body {
+  font-family: Arial;
+  align:center;
+  font-size: 12px;
+  padding: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row {
+	
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  #margin: 0 -16px;
+}
+
+.col-25 {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+}
+
+.col-50 {
+  -ms-flex: 50%; /* IE10 */
+  flex: 50%;
+}
+
+.col-75 {
+  -ms-flex: 75%; /* IE10 */
+  flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+  padding: 0 8px;
+}
+
+.container {
+  background-color: #f2f2f2;
+  padding: 5px 20px 15px 20px;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+
+input[type=text], select {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+
+.icon-container {
+  margin-bottom: 20px;
+  padding: 7px 0;
+  font-size: 24px;
+}
+
+.btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  width: 100%;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.btn:hover {
+  background-color: #45a049;
+}
+
+a {
+  color: #2196F3;
+}
+
+hr {
+  border: 1px solid lightgrey;
+}
+
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-25 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+<script src="./login1.js"></script>
+</head>
+<body>
+  <?
+  include("./header.php");
+  include("./userAccess.php");
+  //astUserTable();
+  //astLogTable();
+  $action="add";
+  //session_start();
+
+  //---------------------NEW-----------------------------------------
+  	$id="";
+  	$page="add";
+  	$rly="";	$divn="";
+  	$name="";	$email="";
+  	$desig=""; //$dept="";
+	$cug="";	$passwd="";
+  	$access="";		$accountStatus="";
+  	$user_type="";
+  	
+  //------------------ON EDIT--------------------------------------------
+  if(isset($_GET['action']) && $_GET['action']!=""){
+  	$action=$_GET['action'];
+	$page=$action;
+  	if($action!='add' && $action!='signup' && ($action=='change' || $action=='edit')){
+  		$id=$_SESSION['astid'];
+		if(isset($_GET["id"])){
+		$id=$_GET['id'];
+		}
+  		$query="SELECT * FROM $userTable WHERE id=\"$id\"";
+		//print $query;
+  		$d=mysqli_query($conn,$query);
+  		$data=mysqli_fetch_assoc($d);
+  		$rly=$data['rly'];	$divn=$data['divn'];
+  		$name=$data['name'];	$email=$data['email'];
+  		$desig=$data['desig']; //$dept=$data['dept'];
+  		$cug=$data['cug'];	$passwd=$data['passwd']; 	$accountStatus=$data['accountStatus'];
+  		$access=$data['access'];		$user_type=$data['user_type']; 
+  	}
+  }
+
+  ?>
+
+<div class="row w3-center">
+  <div class="col-75">
+    <div id="main" class="container">
+      <input type="hidden" id="id" value="<? print $id;?>">
+        <div  class="row">
+
+            <div class="col-50">
+
+
+            <h3>User Details</h3>
+			<? if($page!='change'){ ?>
+			<label for="rly"><i class="fa fa-building-o" aria-hidden="true"></i> Zone</label>
+            <input type="text" id="rly" name="rly" value="<? print $rly; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="eg: SR">
+			
+			<label for="divn"><i class="fa fa-home" aria-hidden="true"></i> Division</label>
+            <input type="text" id="divn" name="divn" value="<? print $divn; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="eg: PGT">
+							
+			
+			<label for="name"><i class="fa fa-user"></i> Full Name</label>
+            <input type="text" id="name" name="name" value="<? print $name; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="full name">
+			
+            <label for="email"><i class="fa fa-envelope"></i>Email</label>
+            <input type="text" id="email" name="email" value="<? print $email; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="Email">
+            
+			<label for="desig"><i class="fa fa-user-circle-o"></i> Designation</label>
+            <input type="text" id="desig" name="desig" value="<? print $desig; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="eg. SSE/T/HQ/PGT">
+			
+            <label for="cug"><i class="fa fa-phone"></i> CUG/Mobile No</label>
+            <input type="text" id="cug" name="cug" value="<? print $cug; ?>" onkeyup="checkBlank(this.id,this.value);checkUserId(this.id,'msg');" placeholder="C.U.G/Mob No.">
+            <?}
+			if($page!='edit'){ 
+            if($page=='change'){ ?>
+			
+			Name: <? print $name; ?><br>
+			Username: <? print $email; ?><br>
+			CUG :<? print $cug; ?><br><hr>
+				<label for="cur_passwd"><i class="fa fa-key"></i>Current Password</label>
+                <input type="text" id="cur_passwd" name="cur_passwd" placeholder="Current Password">
+                <? } ?> 
+
+                <label for="passwd"><i class="fa fa-key"></i>New Password</label>
+                <input type="text" id="passwd" name="passwd" placeholder="New Password">
+                <label for="c_passwd"><i class="fa fa-key"></i>Re-enter Password</label>
+                <input type="text" id="c_passwd" name="c_passwd" placeholder="Confirm Password">
+            <? } ?>
+          </div>
+            <? if(($page!='signup' && $page!='change')&& $_SESSION['astaccess']=='admin'){ ?>
+          <div class="col-50">
+            <h3>Previlages</h3>
+            <label for="accountStatus">Account status</label>
+            <select type="text" id="accountStatus" value="<? print $accountStatus; ?>" name="accountStatus" placeholder="pending">
+              <option value="inactive" <? if($accountStatus=="inactive"){print "selected";}?>>Inactive</option>
+              <option value="active" <? if($accountStatus=="active"){print "selected";}?>>Active</option>
+              <option value="suspended" <? if($accountStatus=="suspended"){print "selected";}?>>Suspend</option>
+              <option value="deleted" <? if($accountStatus=="deleted"){print "selected";}?>>Delete</option>
+              <option value="blocked" <? if($accountStatus=="blocked"){print "selected";}?>>Block</option>
+            </select>
+            <label for="access">Access</label>
+            <select type="text" id="access" name="access"  placeholder="user">
+              <option value="self" <? if($access=="self"){print "selected";}?>>Self</option>
+              <option value="siteadmin" <? if($access=="branchAdmin"){print "selected";}?>>Site Admin</option>
+              <option value="admin" <? if($access=="admin"){print "selected";}?>>Admin</option>
+              <option value="blocked" <? if($access=="blocked"){print "selected";}?>>Blocked</option>
+            </select>
+            <label for="user_type">Acc. Type</label>
+            <select type="text" id="user_type" name="user_type"  placeholder="September">
+              <option value="divn_admin" <? if($user_type=="divn_admin"){print "selected";}?>>Divn Admin</option>
+              <option value="zonal_admin" <? if($user_type=="zonal_admin"){print "selected";}?>>Zone Admin</option>
+              <option value="siteadmin" <? if($user_type=="siteadmin"){print "selected";}?>>Site Admin</option>
+              <option value="admin" <? if($user_type=="admin"){print "selected";}?>>Admin</option>
+            </select>
+          </div>
+            <? } ?>
+        </div>
+        <input id="submit" onclick="this.disabled=true;userRegForm('<? print $page; ?>');" type="submit" value="Submit" class="btn" >
+
+    </div>
+    <div id="msg" style="font-family:Arial;font-size:12px;background-color:#ffe;color:#f00;font-weight:width:400px;height:25px;vertical-align:middle;">
+    Please enter all  fields.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+
+
+  <?
+date_default_timezone_set('Asia/Kolkata');
+include("./createTables.php");
+include("./header.php");
+include("./userAccess.php");
+
+$rootDirLoc="./";
+$rowColor=array(''=>'white');
+$catList=array(	'Signal'=>'S&T',
+				'Tele'=>'S&T',
+				'Drawing'=>'Drawing (S&T office)',
+				'S&T'=>'S&T (Officers)',
+				'engg'=>'Engineering',
+				'eleg'=>'Electrical',
+				'mech'=>'Mechanical',
+				'eleop'=>'Electrical OP',
+				'eletrd'=>'Electrical TRD',
+				'rpf'=>'RPF',
+				'acc'=>'Accounts',
+				'comm'=>'Commercial',
+				'optg'=>'Operating',
+				'safety'=>'Safety',
+				'aud'=>'Audit',
+				'pers'=>'Personnel',
+				'med'=>'Medical',
+				'hindi'=>'Rajbhasha',
+				'stores'=>'Stores',
+				'edpm'=>'EDPM',
+				'gen'=>'General'
+			);
+$search="";
+$dept1=$dept;
+$searchStr="";
+$find="";
+$details="";
+if($dept!="Tele" && $dept!="S&T" ){
+$search="AND dept='$dept' ";
+}
+if(isset($_GET['dept']) && $_GET['dept']!="" ){
+$dept1=$_GET['dept'];
+$search="AND dept='$dept1' ";
+}
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+$searchStr=$_GET['search'];
+$search.=" AND (name RLIKE '$find' OR pfno RLIKE '$find' OR designation RLIKE '$find' OR dept RLIKE '$find' OR cug_no RLIKE '$find' OR cug_provider RLIKE '$find' OR status RLIKE '$find') ";
+}							
+
+?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./w3.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="./index.js"></script>
+<script>
+function myFunction() {
+  var x = document.getElementById("Demo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.cugList {
+	overflow: visible;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 250; /* Position the navbar at the top of the page */
+  }
+#heading{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 5px;
+  font-size: 20px;
+  z-index: 2;
+  overflow: visible;
+}
+#titles{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 120;
+  #background-color: yellow;
+  padding: 5px;
+  font-size: 20px;
+}
+#dept-name{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 150;
+  background-color: #D6EAF8;
+  padding: 5px;
+  
+  font-size: 20px;
+}
+din.demo{
+ z-index: 1;
+ }
+ 
+
+
+</style>
+<body style="background:#EBF5FB ">
+
+<? $page="";
+if((isset($_GET['page'])) && ($_GET['page']!="")){
+$page=$_GET['page'];
+
+if($_GET['page']=="cug"){ ?>
+
+	<div>
+		<div id="heading" class="sticky w3-white ">
+		<div class="w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">CUG requirement List</b></div>
+		</div>
+
+		<div class="w3-bar-item w3-right w3-tiny" onclick="openWindow('./toExel.php',500,700,'block');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-external-link w3-small" aria-hidden="true"> Export to Excel</i> </button></div>
+		  
+		
+		</div>
+		<div>
+	<?			
+		$q="SELECT * FROM $cugTable WHERE name!='' ";
+		$q.=$search;
+		$q.="ORDER BY dept, name ";
+		
+		//print $q;
+		$sn=1; 
+	?>			
+			<table class="w3-table w3-small w3-card" style="background:white;word-break:keep-all;">
+				<tr id="titles" class="sticky w3-small w3-text-blue w3-bold w3-border w3-white"  style="text-align:left;" valign="top">
+					<th width="5%">S.N</th>
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Registrar Name</th> 
+					<th width="20%" style="text-transform:uppercase;border-left:1px solid white">Icoms</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">IP Accounts</th>
+					<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Analog Accounts</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Status</th>
+					<th width="10%" style="text-transform:uppercase;border-left:1px solid white"><i class="fa fa-list-ul" aria-hidden="true"></i></th>
+				</tr>
+				<? 		
+				$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s)){
+					if(mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+				if($dept1!=$d['dept']){
+					$dept1=$d['dept'];
+				?>
+				<tr id="dept-name" class="sticky w3-text-blue" align="center" valign="top" style="text-transform:capitalize;">
+					<td colspan="8" style="text-align:left;" class="w3-large w3-large"> <? print strtoupper($catList[$dept1]);?>  </td>
+				</tr>
+				<? $sn=1; } ?> 
+				
+				<tr  valign="top"  class="w3-hover-light-grey" style="background:<? print $rowColor[''];?> ;text-align:left;height:50px;text-transform:capitalize;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)
+					</td>
+		
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['name'];?><br>
+						<? print $d['pfno'];?><br>
+						<? print $d['designation'];?>
+					</td>
+					
+					<td width="20%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['poi_type']."<br> No: ". $d['poi_uid_no'];?><br><br>
+						<? if($d['poi_uid']!=""){?>
+							<!--span> 
+							<b class="w3-text-green">File Uploaded!!</b>
+							<i class="fa fa-upload w3-large w3-right w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="popupPages('1','cug','upload','<? print $d['id'];?>');"></i>
+							</span-->
+						<? } else {?>
+							<span> 
+							<b class="w3-text-red">File Not Uploaded!!</b>
+							<i class="fa fa-upload w3-large w3-right w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="popupPages('1','cug','upload','<? print $d['id'];?>');"></i>
+							</span>
+						<? }?>
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['cug_no']?><br>
+						
+					</td>
+					
+					<td width="15%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						Service: <? print $d['cug_provider'];?><br>
+						Area: <? print $d['cug_zone']."/".$d['cug_circle'];?><br>
+						Plan: <? print $d['plan'];?>
+					</td>
+					
+					
+					<td width="10%" style="text-transform:uppercase;border-left:1px solid #F8F9F9">
+						<? print $d['status'];?>
+					</td>
+					
+					
+					
+					
+					
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid #F8F9F9">
+						<? if ($user_type=="admin" ||  $userid==$d['cug_req_by']){ ?>
+						<i class="fa fa-pencil-square-o w3-large w3-text-blue" aria-hidden="true" alt="Edit" title="Edit" onclick="popupPages('1','cug','edit','<? print $d['id'];?>');"></i>
+						<? } ?>
+					</td>
+				</tr>
+	<?		}
+		}}
+			 ?>
+			</table>
+		<div class="w3-right w3-opacity" onclick="popupPages('0','cug','add','nil');" ><button class="w3-large w3-green w3-button w3-border w3-round w3-border-green w3-text-white w3-hover-white w3-hover-text-green"><i class="fa fa-plus-circle w3-large " aria-hidden="true"></i> </button></div>
+		
+		</div>
+	</div>
+		 <br><br>
+		 
+<? } if($_GET['page']=="dashboard"){ ?>
+	<div id="heading" class="sticky w3-white ">
+		<div class="w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">CUG requirements</b></div>
+		</div>
+		<div class="w3-bar ">
+			
+			<div class="w3-bar-item w3-right w3-tiny" onclick="openWindow('./toExel.php',500,700,'block');"><button class="w3-button w3-border w3-round w3-border-green w3-text-green  w3-hover-green"><i class="fa fa-external-link w3-small" aria-hidden="true"> Export to Excel</i> </button></div>
+			<div class="w3-bar-item w3-right w3-tiny" onclick="popupPages('0','cug','add','nil');" ><button class="w3-large w3-green w3-button w3-border w3-round w3-border-green w3-text-white w3-hover-white w3-hover-text-green"><i class="fa fa-plus-circle w3-small " aria-hidden="true"> Add Employee details </i> </button></div>
+		</div>
+		
+	</div>		
+	<div class="w3-panel">
+		<div class="w3-row-padding" style="margin:0 -16px">
+		<!------------------------------------------------------------------------->
+		 
+			<table class="w3-table  w3-small w3-striped w3-white w3-border w3-round-large">
+			<tr>
+			<th></th>
+			<th> Department </th>
+			<th> Plan </th>
+			<th> No of Employees   </th>
+			</tr>
+			<?
+			$q="SELECT  dept,plan,COUNT(*) catCount 
+				FROM    $cugTable 
+				WHERE   name!='' AND pfno!='' 
+				GROUP   BY dept,plan";
+				//$q="SELECT req_by,COUNT(*) as catCount FROM $reqTable where qty!='0' AND status!='pending' GROUP BY req_type";
+				//print $q;
+				$s=mysqli_query($conn,$q);
+				$no_rly=mysqli_num_rows($s);
+				while($d=mysqli_fetch_assoc($s)){
+			?>
+			  <tr class="w3-hover-light-blue" onclick="filterData('0','dept','<? print $d['dept']; ?>','')">
+				<td  width="5%"><i class="fa fa-user-o w3-text-blue" aria-hidden="true"></i></td>
+				<td><? print $catList[$d['dept']]; ?></td>
+				<td><? print$d['plan']; ?></td>
+				<td><i ><? print $d['catCount']; ?></i></td>
+			  </tr>
+			  <? }?>
+			</table>
+		
+		<!--------------->
+		</div>
+	   
+
+		<!------------------------------------------------------------------------->
+	</div>
+
+<? } } else { print "Page Not found"; } ?>
+
+
+
+
+</body>

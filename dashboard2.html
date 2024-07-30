@@ -1,0 +1,118 @@
+<?
+include('./header.php');
+//include("./userAccess.php");
+$month="CURRENT_TIMESTAMP";
+$mnth=date('n', time());
+$year=date('Y', time());
+if((isset($_GET['year'])) && ($_GET['year']!="")){
+$mnth=$_GET['month'];
+$year=$_GET['year'];
+$month="'".$_GET['year']."-".$_GET['month']."-1'";
+//echo $month;
+}
+$from="CURDATE()";
+$to="(CURDATE()- interval 1 Month)";
+$rly="";		
+////////////////////////////////////////////
+?>
+	<header class="w3-container" style="padding-top:22px">
+    <h5><b class="w3-text-grey"><i class="fa w3-text-blue fa-dashboard"></i> Admin Dashboard</b></h5>
+	</header>
+
+	
+	<div class="w3-row-padding w3-margin-bottom">
+    <!--------------Registrars ----------->
+	<div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+		<h4><i class="fa fa-database w3-large" aria-hidden="true"></i> Registrars</h4>
+        <!--div class="w3-left w3-half"><i class="fa fa-database w3-xxxlarge" aria-hidden="true"></i></div-->
+        <div class="w3-card ">
+          <h3><?
+			$q="select rly,divn,COUNT(DISTINCT reg1_name) as count from $regTable where reg1_name!='' GROUP BY rly,divn ";
+			$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){
+				if($rly!=$d['rly']){
+					$rly=$d['rly'];
+					print "<div class=\"w3-baritem \">";
+					print " * ".$rly;
+					print "</div>";
+					}
+				print "<div class=\"w3-baritem w3-card w3-padding w3-hover-white\" onclick=\"filterData('4','reg','".$d['rly']."','".$d['divn']."');\"> -- ".$d['divn']."-".$d['count']."</div>";
+				}} 
+			 ?>
+			</h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+    <!--------------icoms ----------->
+	<div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16" >
+		<h4><i class="fa fa-object-group w3-large" aria-hidden="true"></i> Intercoms</h4>
+        <div class="w3-card">
+          <h3><?
+				$q="SELECT registrars.rly as rly, registrars.divn as divn,COUNT(DISTINCT icoms.icom_name) AS count ";
+				$q.="FROM icoms ";
+				$q.="INNER JOIN registrars ON icoms.server_id = registrars.id Group by rly,divn";
+				$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				print "<div class=\"w3-baritem w3-card w3-padding\" > ".$d['rly']."-".$d['divn']."-".$d['count']."</div>";
+				}} 
+		  ?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+     <!--------------ipphones ----------->
+	<div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16" >
+		<h4><i class="fa fa-tty w3-large"></i>  IP Phone users</h4>
+        <div class="w3-card">
+          <h3><?
+			$q="SELECT registrars.rly as rly, registrars.divn as divn,COUNT(accounts.acc_name) AS count ";
+			$q.="FROM accounts ";
+			$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+			$q.="WHERE acc_type='ip'  Group by rly,divn";
+			$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				print "<div class=\"w3-baritem w3-card w3-padding\" > ".$d['rly']."-".$d['divn']."-".$d['count']."</div>";
+				}}
+			?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+     <!--------------analogue phones ----------->
+	<div class="w3-quarter">
+      <div class="w3-container w3-orange w3-text-white w3-padding-16">
+		<h4><i class="fa fa-phone w3-large"></i> Analogue Phone Users</h4>
+        <div class="w3-card">
+          <h3><?
+			$q="SELECT registrars.rly as rly, registrars.divn as divn,COUNT(accounts.acc_name) AS count ";
+			$q.="FROM accounts ";
+			$q.="INNER JOIN registrars ON accounts.server_id = registrars.id ";
+			$q.="WHERE acc_type='analog'  Group by rly,divn";
+			$s=mysqli_query($conn,$q);
+				print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+				print "<div class=\"w3-baritem w3-card w3-padding\" > ".$d['rly']."-".$d['divn']."-".$d['count']."</div>";
+				}}
+			?></h3>
+        </div>
+        <div class="w3-clear"></div>
+        
+      </div>
+    </div>
+	
+	</div>
+	

@@ -1,0 +1,79 @@
+<html>
+<?
+include('./header.php');
+$q="SELECT * FROM $userTable WHERE name!='' ";
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+$q.=" AND (name RLIKE '$find' OR desig RLIKE '$find') ";
+}
+?>
+<div class="w3-container w3-padding-32">
+	<button class="w3-button w3-red w3-text-white" id="save" style="font-size:10px;"
+	onclick="addPages('0','user','add','');"> Add User <i class="fa fa-plus w3-text-white w3-small"></i></button>
+</div>
+<table class="w3-table-all w3-hoverable w3-small" style="word-break:keep-all;padding-top:10px">
+<tr class="w3-teal">
+			<th width="5%">Sl. No.</th>
+			<th width="15%" style="text-transform:uppercase;border-left:1px solid white">Name</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Designation</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">CUG</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Account Status</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">User Type</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Last log</th>
+			<th width="10%" style="text-transform:uppercase;border-left:1px solid white">Action</th>
+		</tr>
+	<?
+		$s=mysqli_query($conn,$q);
+		if(!(!$s) || mysqli_num_rows($s)>0){
+		$sn=1;
+			while($d=mysqli_fetch_assoc($s)){
+				?>
+
+				<tr  valign="top"  style="text-align:left;height:50px;">
+					<td width="5%">
+						(<? print $sn;$sn++?>)</td>
+					<td width="15%" style=";border-left:1px solid grey" >
+						<? print $d['name'];?><br>
+						User Name: <a onclick="addPages('1','user','edit','<? print $d['id'];?>');"><? print $d['email'];?></a>
+					</td>
+					<td width="10%" style=";border-left:1px solid grey">
+						<? print $d['desig']."/".$d['divn']."/".$d['rly'];?>
+					</td>
+					<td width="10%" style=";border-left:1px solid grey">
+						<? print $d['cug'];?>
+					</td>
+					<td width="10%" style=";border-left:1px solid grey">
+						<? print $d['accountStatus'];?><br>
+						<i class="w3-opacity w3-tiny" >Last Activity:</i> <? print date('H:i:s [d-m-Y]',strtotime($d['log_stamp'])); ?>
+					</td>
+					<td width="10%" style=";border-left:1px solid grey">
+						User type:<? print $d['user_type'];?> <br> Access: <? print $d['access'];?>
+					</td>
+					<td width="10%" style="border-left:1px solid grey">
+						<? if ($d['last_log']!=""){ print date('H:i:s [d-m-Y]',strtotime($d['last_log'])); }?>
+					</td>
+					<td width="10%" style="text-transform:capitalize;border-left:1px solid grey">
+					<? if ($d['accountStatus']=="inactive"){?>
+						<a href="#" onclick="quickAction('activateid','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large"><i class="fa fa-check-circle-o" aria-hidden="true"></i></a>
+					<? } else {?>	
+						<a href="#" onclick="quickAction('deactivate','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large "><i class="fa fa-ban" aria-hidden="true"></i></a>
+					<? }?>	&nbsp;
+						
+						<a href="#" onclick="quickAction('delete','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large"><i class="fa fa-trash-o" aria-hidden="true"></i></a> &nbsp;
+						<a href="#" onclick="quickAction('reset','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large "><i class="fa fa-unlock" aria-hidden="true"></i></a> &nbsp;
+						<a href="#" onclick="addPages('1','user','edit','<? print $d['id'];?>');" class="w3-text-blue w3-hover-text-red w3-large "><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+
+					</td>
+				</tr>
+	<?		}
+		}	else{ ?>
+    <tr  valign="top"  style="text-align:left;height:50px;text-transform:capitalize;">
+        <td colspan="11" >
+          No records </td>
+    </tr>
+
+    <?}
+    ?>
+</table>
+  <hr>
+  </html>

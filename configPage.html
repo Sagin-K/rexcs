@@ -1,0 +1,220 @@
+<body>
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 1px;
+  font-size: 20px;
+  z-index: 2;
+  overflow: visible;
+}
+tr.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60;
+  padding: 5px;
+  font-size: 20px;
+}
+din.demo{
+ z-index: 1;
+ }
+</style>
+<?
+include("./header.php");
+if (isset($_GET['page'])){
+$page=$_GET['page'];
+}
+if (isset($_GET['acc_type'])){
+$acc_type=$_GET['acc_type'];
+}
+if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+					$secIP=$d['reg2_ip'];
+					$installed1_on=$d['installed1_on'];
+				}}
+		$q2="select * from updates order by date DESC limit 1";
+		$s2=mysqli_query($conn,$q2);
+				if(!(!$s2) || mysqli_num_rows($s2)>0){
+					while($d2=mysqli_fetch_assoc($s2)){ 
+						$update_date=$d2['date'];
+				}}
+?>
+
+	  <div class="sticky w3-bar ">
+		  <div class="w3-bar-item w3-xxlarge" style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';"> Update Configuration</b></div>
+		</div>
+		<div class="sticky w3-bar ">
+		  <i class="w3-small w3-text-grey" ><? print $regName." Exchange (IP: ". $primaryIP.")   / [". $divn1." division /". $rly1."]"; ?></i>
+		</div>
+		<br>
+		<br>
+		<br>
+<div class="w3-container  w3-centere w3-medium">	
+	  <div id="change" class="w3-button w3-card w3-hover-light-blue  w3-center w3-round  w3-border w3-border-blue" onclick="viewChange('0','page','changes','');"><p><i class="fa fa-th-list  w3-text-blue w3-large" aria-hidden="true"></i> View Changes</p></div>
+	  <!--div class="w3-panel w3-card w3-hover-light-blue w3-center" onclick="location.href='./index.html?page=saveconf'"><p><i class="fa fa-floppy-o w3-text-green w3-large" aria-hidden="true"></i> Save to Server (AstConf)</p></div-->
+	  <!--div class="w3-panel w3-card w3-hover-light-blue w3-center" onclick="location.href='./index.html?page=rxcl'"><p><i class="fa fa-floppy-o w3-text-green w3-large" aria-hidden="true"></i> Generate RExCL File</p></div-->
+	  <!--div class="w3-panel w3-card w3-hover-light-blue w3-center w3-round w3-border w3-border-green " onclick="location.href='./index.html?page=rxcl2'"><p><i class="fa fa-floppy-o w3-text-green w3-large" aria-hidden="true"></i> Save to Server</p></div-->
+	  <? if ($installed1_on!="" && ($installed1_on< $update_date)){ ?>
+		<div id="save" class="w3-button w3-card w3-hover-light-blue w3-center w3-round w3-border w3-border-green " onclick="addPages('2','reg','install','');"><p><i class="fa fa-floppy-o w3-text-green w3-large" aria-hidden="true"></i> Update & Save to Server</p></div>
+		<? } else { ?>
+		
+		<div id="save" class="w3-button w3-card w3-hover-light-blue w3-center w3-round w3-border w3-border-green " onclick="document.getElementById('create').style.display='block';createRexcl();"><p><i class="fa fa-floppy-o w3-text-green w3-large" aria-hidden="true"></i> Save to Server</p></div>
+	  
+	  <? } ?> 
+	  
+	<div id="create" class="w3-large"  style="display:none">
+	
+	<!---------- Progress Bar --------->
+	<div class="w3-panel  w3-padding">
+	<div class="w3-half w3-light-grey">
+		<div id="progBar1" class="w3-container w3-green w3-center" style="height:24px;width:0%">
+		<b id="progBarValue1">0</b>%</div>
+	</div>
+	
+	<? if ($secIP!=""){ ?>
+		<div class="w3-half w3-light-grey">
+			<div id="progBar2" class="w3-container w3-blue w3-center" style="height:24px;width:0%">
+			<b id="progBarValue2">0</b>%</div>
+		</div>
+	<? } ?>	
+	</div>
+	
+	<div class="w3-panel  w3-padding">
+		<!--div class="w3-third w3-meduim w3-border-bottom w3-border-brown " style="text-transform:uppercase;color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		   Status 
+		</div-->
+		<div class="w3-half w3-meduim w3-border-bottom w3-border-brown" style="color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		   Primary 
+		</div>
+	<? if ($secIP!=""){ ?>
+		<div class="w3-half w3-meduim w3-border-bottom w3-border-brown" style="color:#18303c;text-transform:bold;font-family: 'Trebuchet MS';">
+		   Redundant
+		</div>
+	<? } ?>	
+	</div>
+		
+	<div  class="w3-panel w3-padding w3-animate-opacity" > 
+	  <!--div class="w3-half w3-medium" >
+		(1) Create REXCL
+	  </div-->
+	  <div id="create1" class="w3-half w3-medium w3-text-blue w3-animate-opacity">
+		Creating.. <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	  
+	</div>
+	<div  id="connect" class="w3-panel w3-padding w3-animate-opacity"   style="display:none"> 
+	  <!--div class="w3-half w3-medium" >
+		(2) Connect
+	  </div-->
+	  <div id="connect1" class="w3-half w3-medium w3-text-blue w3-animate-opacity">
+		Connecting to Server... <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="connect22" class="w3-half w3-medium w3-text-blue w3-animate-opacity">
+		Connecting to Server... <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="copy" class="w3-panel w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class=" w3-half w3-medium" >
+		(3) Copy Files
+	  </div-->
+	  <div id="copy1" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Copying RExCL file... <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="copy2" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Copying RExCL file... <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="run" class="w3-panel w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class=" w3-half w3-medium" >
+		(4) Run RExCL Tool
+	  </div-->
+	  <div id="run1" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Executing RExCL <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="run2" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Executing RExCL <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="update" class="w3-panel  w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class=" w3-half w3-medium" >
+		(5) Update Conf Files
+	  </div-->
+	  <div id="update1" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Updating Conf Files <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="update2" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Updating Conf Files <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="reload" class="w3-panel  w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class=" w3-half w3-medium" >
+		(6) Reload Asterisk
+	  </div-->
+	  <div id="reload1" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Reloading Asterisk <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="reload2" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Reloading Asterisk <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="commit" class="w3-panel  w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class=" w3-half w3-medium" >
+		(7) Update RExCS DB
+	  </div-->
+	  <div id="commit1" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Updating.. DB <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? if ($secIP!=""){ ?>
+	  <div id="commit2" class=" w3-half w3-medium w3-text-blue w3-animate-opacity" >
+		Updating.. DB <i class="fa fa-spinner w3-spin w3-text-blue"></i>
+	  </div>
+	<? } ?>	  
+	</div>
+	<div id="completed" class="w3-panel  w3-border-top w3-border-brown w3-center w3-text-blue w3-padding w3-animate-opacity"  style="display:none"> 
+	  <!--div class="w3-large w3-animate-zoom" >
+		---------
+	  </div-->
+	  <div id="completed1" class="w3-large w3-animate-zoom" >
+		Completed
+	  </div>
+	  
+	</div>
+	
+	
+	</div>
+
+
+
+</div>
+<? } ?>
+</body>

@@ -1,0 +1,254 @@
+<?
+date_default_timezone_set('Asia/Kolkata');
+include("./createTables.php");
+include("./header.php");
+//regTable();
+//icomTable();
+//gatewayTable();
+//accountTable();
+//routeTable();
+//phoneTable();
+$rootDirLoc="./";
+$rowColor=array(''=>'#C1EDEE',
+				'ip'=>'#FBFCFC ',
+				'ip1'=>'#FBFCFC ',
+				'ip2'=>'#FBFCFC',
+				'analog'=>'#FBFCFC',
+				'hunt'=>'#FBFCFC',
+				'low'=>'#FBFCFC '
+				
+							);
+
+$search="";
+$searchStr="";
+$find="";
+$details="";
+
+if((isset($_GET['acc_type'])) && ($_GET['acc_type']!="")){
+	$acc_type=$_GET['acc_type'];						
+} 
+if((isset($_GET['search'])) && ($_GET['search']!="")){
+$find=$_GET['search'];
+$searchStr=$_GET['search'];
+$search=" AND (acc_name RLIKE '$find' OR rly_no RLIKE '$find' OR icom_no RLIKE '$find' OR pstn_no RLIKE '$find' OR icom_name RLIKE '$find') ";
+}							
+if((isset($_GET['req_type'])) && ($_GET['req_type']!="")){
+$find=$_GET['req_type'];
+$search.=" AND req_type='$find' ";
+}							
+							
+if((isset($_GET['rly_no'])) && ($_GET['rly_no']!="")){
+$find=$_GET['rly_no'];
+$search.=" AND rly_no='$find' ";
+}														
+if((isset($_GET['acc_name'])) && ($_GET['acc_name']!="")){
+$details="show";
+$find=$_GET['acc_name'];
+$search=" AND acc_name='$find' ";
+}							
+							
+//print $search;
+?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./w3.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+function myFunction() {
+  var x = document.getElementById("Demo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+<style>
+.navbar {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  }
+.navbarh {
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 50px; /* Position the navbar at the top of the page */
+  }
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 5px;
+  font-size: 20px;
+  z-index: 2;
+  overflow: visible;
+}
+tr.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60;
+  background-color: yellow;
+  padding: 5px;
+  font-size: 20px;
+}
+din.demo{
+ z-index: 1;
+ }
+ 
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 6; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 1% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 85%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+</style>
+<body style="background:#EBF5FB ">
+
+<?			
+			
+		if(isset($_SESSION['registrar'])){
+		$registrar=$_SESSION['registrar'];
+		$q="SELECT * FROM $regTable where id= $registrar";
+		$s=mysqli_query($conn,$q);
+				//print mysqli_error($conn);
+				if(!(!$s) || mysqli_num_rows($s)>0){
+				while($d=mysqli_fetch_assoc($s)){ 
+					$rly1=$d['rly'];
+					$divn1=$d['divn'];
+					$regName=$d['reg1_name'];
+					$primaryIP=$d['reg1_ip'];
+					$owner=$d['owner'];
+				}}
+//------------------------------------------------------------------------ ipphone -----------------------------------------//			
+
+		if ($_GET['acc_type']=="ip"){		
+		include("./ipaccList.php");
+		}
+	
+//----------------------------------------------------------- ipphone1 page ends------------------------------------------------//
+
+//------------------------------------------------------------- IP2 page  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="ip2"){
+		include("./ip2accList.php");
+		}
+
+//----------------------------------------------------------- IP2 page ends-------------------------------------------------------------------------//
+//------------------------------------------------------------- Boss Secratery  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="bs"){
+		include("./bsList.php");
+		}
+
+//----------------------------------------------------------- Boss-Secy page ends-------------------------------------------------------------------------//
+
+//------------------------------------------------------------- Analogue Phone  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="analog"){
+		include("./analogList.php");
+		}
+
+//----------------------------------------------------------- Analog page ends-------------------------------------------------------------------------//
+
+//------------------------------------------------------------- Short Code List  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="map"){
+		include("./mapList.php");
+		}
+
+//----------------------------------------------------------- Short code List-------------------------------------------------------------------------//
+	
+//------------------------------------------------------------- Byte Intercom List  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="byte"){
+		include("./byteList.php");
+		}
+
+	//----------------------------------------------------------- Byte intercom List ends-------------------------------------------------------------------------//
+	
+//------------------------------------------------------------- Hunt group List  -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="hunt"){
+		include("./huntList.php");
+		}
+
+	//----------------------------------------------------------- Hunt List ends-------------------------------------------------------------------------//
+//------------------------------------------------------------- Parallel Num Starts -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="parallel"){
+		include("./parallelList.php");
+		}
+
+//----------------------------------------------------------- Parallel Connections ends-------------------------------------------------------------------------//
+//------------------------------------------------------------- Voicemail Starts -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="vm"){
+		include("./voicemailList.php");
+		}
+
+//----------------------------------------------------------- VoiceMail ends-------------------------------------------------------------------------//
+//------------------------------------------------------------- Recording Starts -----------------------------------------//			
+			
+			
+		if ($_GET['acc_type']=="rec"){
+		include("./recordList.php");
+		}
+
+//----------------------------------------------------------- Recording ends-------------------------------------------------------------------------//
+	
+	} else{      //-------------------------- Choose Server
+			Print "<b class='w3-xlarge  w3-text-red'>Please choose a VOIP Server <a href='./index.html?page=reg&acc_type=reg' class='w3-button w3-blue w3-medium w3-text-white'><i class='fa fa-caret-square-o-right' aria-hidden='true'></i> Select Registrar </a></b> ";
+			}
+			?>
+
+<div id="id01" class="modal"> 
+  <div class="modal-content animate" >
+	<!--------------------------- Popup Page CONTENT! ------------------------------------------>
+	<div class="w3-small" style="overflow-x: auto;height:85%;overflow:auto;width:100%"  >
+		
+		<div id="popup" style="width:100%;">
+			
+		</div>
+	<!------------------- End page content ---------------------------------->
+	</div>
+	
+  </div>
+</div>
+
+
+</body>
