@@ -3,13 +3,8 @@
 //----------------------------------------------------------
 //--function to verify Login & Passwords--------------------
 function validateLogRequest($u,$p){
-
-	$dbName="asterisk";	$userTable="astusers";
-	//------------------------------------------------------
-
-
-		$conn=mysqli_connect("localhost","rexcsiriset","321rexcs789",$dbName);
-	//--------------------------------------------------
+include ('./Connect.php');
+	$userTable="astusers";
 		$query="SELECT * FROM $userTable
 				WHERE 	email=\"$u\" ";
 		$status=mysqli_query($conn,$query);
@@ -114,6 +109,7 @@ $err[00]="Login Failed. Retry. ";
 $logStatus=array(00,"","");
 //----------------------------------------------------------
 if(isset($_GET['action'])){
+	include ('./Connect.php');
 	session_start();
 	if(strcasecmp($_GET['action'],"login")==0){
 		$u=		$_GET['u'];
@@ -125,8 +121,6 @@ if(isset($_GET['action'])){
 //--------------- WHEN USER LOGS OUT FROM ANY PAGE ----------
 //-----------------------------------------------------------
 	else if(strcasecmp($_GET['action'],"logout")==0 && isset($_SESSION['astuser'])){	
-		$dbName="asterisk";
-		$conn=mysqli_connect("localhost","rexcsiriset","321rexcs789",$dbName);
 		$userTable="astusers";
 		$query="SELECT id FROM $userTable WHERE name=\"".$_SESSION['astuser']."\"";
 		$status=mysqli_query($conn,$query);
