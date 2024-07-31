@@ -1,8 +1,5 @@
  <?
-	$dbName="asterisk";
-	$conn=mysqli_connect("localhost","rexcsiriset","321rexcs789",$dbName);
-	//$conn=@mysqli_connect("localhost","root","12345",$dbName);
-	//$conn1=@mysqli_connect("localhost","root","12345","assets");
+ include ('./Connect.php');
 	$userTable="astusers";
 	$regTable="registrars";
 	$accTable="accounts";
