@@ -1,5 +1,5 @@
 <?
-	$dbName="asterisk";
+	$dbName="DBname";
 	
-	$conn=mysqli_connect("localhost","rexcsiriset","321rexcs789",$dbName);
+	$conn=mysqli_connect("localhost","UserName","Password",$dbName);
 	?>
